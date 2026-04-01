@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const API_URL = '/api/site-data';
+(function () {
+    const API_URL = window.location.hostname.includes('vercel') ? '/api/site-data' : 'https://mpc-construcoes.vercel.app/api/site-data';
+
+    function init() {
 
     const defaultData = {
         logo_img: "LOGO1.png",
@@ -221,4 +223,11 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Erro ao carregar dados da API, usando padrão:', e);
             applyContent(defaultData, defaultPortfolio);
         });
-});
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
