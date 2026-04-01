@@ -74,6 +74,21 @@ function createFileContent(filePath, content, message) {
   });
 }
 
+function parseBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', (chunk) => { body += chunk; });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch {
+        reject(new Error('Invalid JSON body'));
+      }
+    });
+    req.on('error', reject);
+  });
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -111,7 +126,12 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { config, portfolio } = req.body;
+      const body = await parseBody(req);
+      const { config, portfolio } = body;
+
+      if (!config || !portfolio) {
+        return res.status(400).json({ error: 'Missing config or portfolio' });
+      }
 
       const configPromise = getFileContent(FILE_PATH).then(({ data }) => {
         if (data.sha) {
