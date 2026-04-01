@@ -922,92 +922,131 @@
             { img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80", nome: "Apartamento Alto Padrão", categoria: "RESIDENCIAL, ACABAMENTO" }
         ];
 
+        const API_URL = '/api/site-data';
+
         function carregarDados() {
-            try {
-                let savedData = JSON.parse(localStorage.getItem('mcp_site_data'));
-                if (!savedData || typeof savedData !== 'object' || Object.keys(savedData).length === 0) {
-                    savedData = defaultConfig;
-                }
+            const loadingMsg = document.createElement('div');
+            loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.3);z-index:9999;text-align:center;';
+            loadingMsg.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:#c8a96e;"></i><p style="margin-top:10px;">Carregando dados...</p>';
+            document.body.appendChild(loadingMsg);
 
-                for (const key in defaultConfig) {
-                    const el = document.getElementById(key);
-                    if (el) {
-                        const valorSalvo = savedData[key];
-                        el.value = valorSalvo !== undefined && valorSalvo !== null ? valorSalvo : defaultConfig[key];
+            fetch(API_URL)
+                .then(r => r.json())
+                .then(({ config, portfolio }) => {
+                    document.body.removeChild(loadingMsg);
+                    const savedData = config && Object.keys(config).length > 0 ? config : defaultConfig;
 
-                        if (key.includes('_img')) {
-                            const prevId = getPreviewId(key);
-                            if (prevId) {
-                                previewImg(key, prevId);
+                    for (const key in defaultConfig) {
+                        const el = document.getElementById(key);
+                        if (el) {
+                            const valorSalvo = savedData[key];
+                            el.value = valorSalvo !== undefined && valorSalvo !== null ? valorSalvo : defaultConfig[key];
+
+                            if (key.includes('_img')) {
+                                const prevId = getPreviewId(key);
+                                if (prevId) {
+                                    previewImg(key, prevId);
+                                }
                             }
-                        }
 
-                        if (key === 'logo_size') {
-                            const valEl = document.getElementById('logo_size_val');
-                            if (valEl) {
-                                const valor = valorSalvo !== undefined ? valorSalvo : defaultConfig[key];
-                                valEl.innerText = valor + 'px';
+                            if (key === 'logo_size') {
+                                const valEl = document.getElementById('logo_size_val');
+                                if (valEl) {
+                                    const valor = valorSalvo !== undefined ? valorSalvo : defaultConfig[key];
+                                    valEl.innerText = valor + 'px';
+                                }
                             }
                         }
                     }
-                }
 
-                let savedPort = JSON.parse(localStorage.getItem('mcp_site_portfolio'));
-                if (!savedPort || !Array.isArray(savedPort) || savedPort.length === 0) {
-                    savedPort = defaultPortfolio;
-                }
-                portfolioItems = savedPort;
-                renderPortfolio();
+                    if (portfolio && Array.isArray(portfolio) && portfolio.length > 0) {
+                        portfolioItems = portfolio;
+                    } else {
+                        portfolioItems = defaultPortfolio;
+                    }
+                    renderPortfolio();
+                })
+                .catch(e => {
+                    console.error('Erro ao carregar dados da API:', e);
+                    document.body.removeChild(loadingMsg);
+                    showNotification('Erro ao carregar dados. Usando dados locais.', '#e74c3c');
 
-            } catch (e) {
-                console.error('Erro ao carregar dados:', e);
-            }
+                    for (const key in defaultConfig) {
+                        const el = document.getElementById(key);
+                        if (el) {
+                            el.value = defaultConfig[key];
+                            if (key.includes('_img')) {
+                                const prevId = getPreviewId(key);
+                                if (prevId) previewImg(key, prevId);
+                            }
+                            if (key === 'logo_size') {
+                                document.getElementById('logo_size_val').innerText = defaultConfig[key] + 'px';
+                            }
+                        }
+                    }
+                    portfolioItems = defaultPortfolio;
+                    renderPortfolio();
+                });
         }
 
         function salvarAlteracoes() {
             const savedData = {};
-
             for (const key in defaultConfig) {
                 const el = document.getElementById(key);
-                if (el) {
-                    savedData[key] = el.value;
+                savedData[key] = el ? el.value : defaultConfig[key];
+            }
+
+            const notif = document.getElementById('notif');
+            notif.classList.add('show');
+            notif.innerText = "Salvando...";
+            notif.style.background = "#2196F3";
+
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ config: savedData, portfolio: portfolioItems })
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    notif.innerText = "Alterações salvas com sucesso! Visível em todos os dispositivos.";
+                    notif.style.background = "#4CAF50";
                 } else {
-                    savedData[key] = defaultConfig[key];
+                    throw new Error(result.error || 'Erro desconhecido');
                 }
-            }
-
-            try {
-                localStorage.setItem('mcp_site_data', JSON.stringify(savedData));
-                localStorage.setItem('mcp_site_portfolio', JSON.stringify(portfolioItems));
-
-                const notif = document.getElementById('notif');
-                notif.classList.add('show');
-                notif.innerText = "Alterações salvas com sucesso!";
-                notif.style.background = "#4CAF50";
+            })
+            .catch(e => {
+                console.error('Erro ao salvar via API:', e);
+                notif.innerText = "Erro ao salvar! Verifique sua conexão.";
+                notif.style.background = "#e74c3c";
+            })
+            .finally(() => {
                 setTimeout(() => notif.classList.remove('show'), 3000);
-            } catch (e) {
-                console.error('Erro ao salvar:', e);
-                alert("Erro ao salvar! A imagem pode ser muito grande. Tente arquivos mais leves ou use URLs externas.");
-            }
+            });
         }
 
         function exportarDados() {
-            try {
-                const dados = {
-                    config: JSON.parse(localStorage.getItem('mcp_site_data') || '{}'),
-                    portfolio: JSON.parse(localStorage.getItem('mcp_site_portfolio') || '[]')
-                };
-                const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'mcp-construcoes-backup.json';
-                a.click();
-                URL.revokeObjectURL(url);
-            } catch (e) {
-                console.error('Erro ao exportar:', e);
-                alert('Erro ao exportar dados!');
+            const savedData = {};
+            for (const key in defaultConfig) {
+                const el = document.getElementById(key);
+                savedData[key] = el ? el.value : defaultConfig[key];
             }
+            const dados = { config: savedData, portfolio: portfolioItems };
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mcp-construcoes-backup.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function showNotification(msg, color) {
+            const notif = document.getElementById('notif');
+            notif.classList.add('show');
+            notif.innerText = msg;
+            notif.style.background = color || '#4CAF50';
+            setTimeout(() => notif.classList.remove('show'), 3000);
         }
 
         function previewImg(inputId, imgId) {
