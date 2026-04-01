@@ -922,75 +922,50 @@
             { img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80", nome: "Apartamento Alto Padrão", categoria: "RESIDENCIAL, ACABAMENTO" }
         ];
 
-        const API_URL = window.location.hostname.includes('vercel') ? '/api/site-data' : 'https://mpc-construcoes.vercel.app/api/site-data';
+        const API_URL = 'https://mpc-construcoes.vercel.app/api/site-data';
 
         function carregarDados() {
-            const loadingMsg = document.createElement('div');
-            loadingMsg.id = 'loading-overlay';
-            loadingMsg.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:9999;';
-            loadingMsg.innerHTML = '<div style="background:#fff;padding:30px;border-radius:10px;text-align:center;"><i class="fas fa-spinner fa-spin" style="font-size:24px;color:#c8a96e;"></i><p style="margin-top:10px;">Carregando dados...</p></div>';
-            document.body.appendChild(loadingMsg);
-
-            function removeLoading() {
-                const el = document.getElementById('loading-overlay');
-                if (el && el.parentNode) el.parentNode.removeChild(el);
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-            fetch(API_URL, { signal: controller.signal })
+            fetch(API_URL)
                 .then(r => {
-                    clearTimeout(timeoutId);
                     if (!r.ok) throw new Error('HTTP ' + r.status);
                     return r.json();
                 })
-                .then(({ config, portfolio }) => {
-                    removeLoading();
-                    const savedData = config && Object.keys(config).length > 0 ? config : defaultConfig;
+                .then(function(result) {
+                    var config = result.config || {};
+                    var portfolio = result.portfolio || [];
+                    var savedData = Object.keys(config).length > 0 ? config : defaultConfig;
 
-                    for (const key in defaultConfig) {
-                        const el = document.getElementById(key);
+                    for (var key in defaultConfig) {
+                        var el = document.getElementById(key);
                         if (el) {
-                            const valorSalvo = savedData[key];
-                            el.value = valorSalvo !== undefined && valorSalvo !== null ? valorSalvo : defaultConfig[key];
-
-                            if (key.includes('_img')) {
-                                const prevId = getPreviewId(key);
-                                if (prevId) {
-                                    previewImg(key, prevId);
-                                }
+                            var val = savedData[key] !== undefined && savedData[key] !== null ? savedData[key] : defaultConfig[key];
+                            el.value = val;
+                            if (key.indexOf('_img') !== -1) {
+                                var prevId = getPreviewId(key);
+                                if (prevId) previewImg(key, prevId);
                             }
-
                             if (key === 'logo_size') {
-                                const valEl = document.getElementById('logo_size_val');
-                                if (valEl) {
-                                    const valor = valorSalvo !== undefined ? valorSalvo : defaultConfig[key];
-                                    valEl.innerText = valor + 'px';
-                                }
+                                var valEl = document.getElementById('logo_size_val');
+                                if (valEl) valEl.innerText = val + 'px';
                             }
                         }
                     }
 
-                    if (portfolio && Array.isArray(portfolio) && portfolio.length > 0) {
+                    if (Array.isArray(portfolio) && portfolio.length > 0) {
                         portfolioItems = portfolio;
                     } else {
                         portfolioItems = defaultPortfolio;
                     }
                     renderPortfolio();
                 })
-                .catch(e => {
-                    clearTimeout(timeoutId);
-                    removeLoading();
-                    console.error('Erro ao carregar dados da API:', e);
-                    showNotification('Usando dados padrão. Verifique sua conexão.', '#e74c3c');
-
-                    for (const key in defaultConfig) {
-                        const el = document.getElementById(key);
+                .catch(function(e) {
+                    console.error('Erro ao carregar dados:', e);
+                    for (var key in defaultConfig) {
+                        var el = document.getElementById(key);
                         if (el) {
                             el.value = defaultConfig[key];
-                            if (key.includes('_img')) {
-                                const prevId = getPreviewId(key);
+                            if (key.indexOf('_img') !== -1) {
+                                var prevId = getPreviewId(key);
                                 if (prevId) previewImg(key, prevId);
                             }
                             if (key === 'logo_size') {
@@ -1004,51 +979,51 @@
         }
 
         function salvarAlteracoes() {
-            const savedData = {};
-            for (const key in defaultConfig) {
-                const el = document.getElementById(key);
+            var savedData = {};
+            for (var key in defaultConfig) {
+                var el = document.getElementById(key);
                 savedData[key] = el ? el.value : defaultConfig[key];
             }
 
-            const notif = document.getElementById('notif');
+            var notif = document.getElementById('notif');
             notif.classList.add('show');
-            notif.innerText = "Salvando...";
-            notif.style.background = "#2196F3";
+            notif.innerText = 'Salvando...';
+            notif.style.background = '#2196F3';
 
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ config: savedData, portfolio: portfolioItems })
             })
-            .then(r => r.json())
-            .then(result => {
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
                 if (result.success) {
-                    notif.innerText = "Alterações salvas com sucesso! Visível em todos os dispositivos.";
-                    notif.style.background = "#4CAF50";
+                    notif.innerText = 'Alterações salvas! Visível em todos os dispositivos.';
+                    notif.style.background = '#4CAF50';
                 } else {
                     throw new Error(result.error || 'Erro desconhecido');
                 }
             })
-            .catch(e => {
-                console.error('Erro ao salvar via API:', e);
-                notif.innerText = "Erro ao salvar! Verifique sua conexão.";
-                notif.style.background = "#e74c3c";
+            .catch(function(e) {
+                console.error('Erro ao salvar:', e);
+                notif.innerText = 'Erro ao salvar! Verifique sua conexão.';
+                notif.style.background = '#e74c3c';
             })
-            .finally(() => {
-                setTimeout(() => notif.classList.remove('show'), 3000);
+            .finally(function() {
+                setTimeout(function() { notif.classList.remove('show'); }, 3000);
             });
         }
 
         function exportarDados() {
-            const savedData = {};
-            for (const key in defaultConfig) {
-                const el = document.getElementById(key);
+            var savedData = {};
+            for (var key in defaultConfig) {
+                var el = document.getElementById(key);
                 savedData[key] = el ? el.value : defaultConfig[key];
             }
-            const dados = { config: savedData, portfolio: portfolioItems };
-            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            var dados = { config: savedData, portfolio: portfolioItems };
+            var blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
             a.href = url;
             a.download = 'mcp-construcoes-backup.json';
             a.click();
@@ -1056,18 +1031,18 @@
         }
 
         function showNotification(msg, color) {
-            const notif = document.getElementById('notif');
+            var notif = document.getElementById('notif');
             notif.classList.add('show');
             notif.innerText = msg;
             notif.style.background = color || '#4CAF50';
-            setTimeout(() => notif.classList.remove('show'), 3000);
+            setTimeout(function() { notif.classList.remove('show'); }, 3000);
         }
 
         function previewImg(inputId, imgId) {
-            const inputEl = document.getElementById(inputId);
-            const imgEl = document.getElementById(imgId);
+            var inputEl = document.getElementById(inputId);
+            var imgEl = document.getElementById(imgId);
             if (imgEl && inputEl) {
-                const val = inputEl.value;
+                var val = inputEl.value;
                 if (val && val.length > 0) {
                     imgEl.src = val;
                     imgEl.style.display = 'block';
@@ -1078,19 +1053,16 @@
         }
 
         window.addEventListener('load', function() {
-            const logoEl = document.getElementById('logo_img');
+            var logoEl = document.getElementById('logo_img');
             if (logoEl) previewImg('logo_img', 'prev_logo');
-
-            ['slide1', 'slide2', 'slide3', 'slide4'].forEach(num => {
+            ['slide1', 'slide2', 'slide3', 'slide4'].forEach(function(num) {
                 previewImg(num + '_img', 'prev_' + num);
             });
-
             previewImg('serv_img1', 'prev_serv1');
             previewImg('serv_img2', 'prev_serv2');
             previewImg('sobre_img', 'prev_sobre');
             previewImg('cta_img', 'prev_cta');
-
-            for (let i = 1; i <= 4; i++) {
+            for (var i = 1; i <= 4; i++) {
                 previewImg('proj' + i + '_img', 'prev_proj' + i);
             }
         });
