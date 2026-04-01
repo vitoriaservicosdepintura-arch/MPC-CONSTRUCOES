@@ -73,7 +73,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const headerLogo = document.querySelector('.logo img');
         if (headerLogo) {
             if (md.logo_img) headerLogo.src = md.logo_img;
-            if (md.logo_size) headerLogo.style.maxHeight = md.logo_size + "px";
+            if (md.logo_size) {
+                headerLogo.style.maxHeight = md.logo_size + "px";
+                headerLogo.style.width = "auto";
+                headerLogo.style.maxWidth = "none";
+            }
+        }
+
+        const footerLogo = document.querySelector('footer .col:nth-child(1) img');
+        if (footerLogo) {
+            if (md.logo_img) footerLogo.src = md.logo_img;
+            if (md.logo_size) {
+                const footerSize = Math.max(20, md.logo_size - 10);
+                footerLogo.style.maxHeight = footerSize + "px";
+                footerLogo.style.width = "auto";
+                footerLogo.style.maxWidth = "none";
+            }
         }
 
         const footerLogo = document.querySelector('footer .col:nth-child(1) img');
