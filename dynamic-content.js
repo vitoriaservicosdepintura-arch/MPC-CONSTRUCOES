@@ -132,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Stats Text
     setHtml('.typing-txt', md.stats_text);
-    setHtml('#section-6 h2', md.stats_text);
 
     /* ==== SERVIÇOS ==== */
     const servRows = document.querySelectorAll('#section-2 .row');
