@@ -22,7 +22,7 @@
   "serv_txt1": "A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados para entregar a casa dos seus sonhos.",
   "serv_img1": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80",
   "serv_tit2": "Obras Comerciais e Industriais",
-  "serv_txt2": "Galpões, lojas, escritórios e estruturas industriais prontos para o seu negócio. Projetos sob medida com eficiência e qualidade.",
+  "serv_txt2": "Lojas, escritorios prontos para o seu negocio, focando em funcionalodade e designer.",
   "serv_img2": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80",
   "proj_tit": "PROJETOS RECENTES",
   "proj1_nome": "Residencial Vila Nova",
@@ -43,5 +43,17 @@
   "contato_tel": "+351 934 627 192",
   "contato_email": "contato@mcpconstrucoes.pt",
   "contato_hr": "Seg–Sex: 08h às 18h",
-  "footer_desc": "Mais de 15 anos entregando obras com qualidade, prazo e compromisso."
+  "footer_desc": "Mais de 15 anos entregando obras com qualidade, prazo e compromisso.",
+  "card1_tit": "Construção Residencial",
+  "card1_txt": "Casas, apartamentos e condomínios com acabamento de alto padrão e projetos personalizados.",
+  "card2_tit": "Reformas e Ampliações",
+  "card2_txt": "Reformas completas com planejamento detalhado e execução eficiente para transformar seu espaço.",
+  "card3_tit": "Construção Comercial",
+  "card3_txt": "Galpões, lojas e escritórios prontos para o seu negócio, focando em funcionalidade e design.",
+  "card4_tit": "Acabamento e Pintura",
+  "card4_txt": "Pintura interna, externa e revestimentos decorativos com materiais de primeiríssima qualidade.",
+  "card5_tit": "Instalações Elétricas e Hidráulicas",
+  "card5_txt": "Projetos e manutenção com materiais certificados e profissionais altamente qualificados.",
+  "card6_tit": "Projetos e Consultoria",
+  "card6_txt": "Acompanhamento técnico especializado do projeto à entrega final da obra."
 }

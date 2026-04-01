@@ -46,7 +46,13 @@
         contato_tel: '+351 934 627 192',
         contato_email: 'contato@mcpconstrucoes.pt',
         contato_hr: 'Seg–Sex: 08h às 18h',
-        footer_desc: 'Mais de 15 anos entregando obras com qualidade, prazo e compromisso.'
+        footer_desc: 'Mais de 15 anos entregando obras com qualidade, prazo e compromisso.',
+        card1_tit: 'Construção Residencial', card1_txt: 'Casas, apartamentos e condomínios com acabamento de alto padrão e projetos personalizados.',
+        card2_tit: 'Reformas e Ampliações', card2_txt: 'Reformas completas com planejamento detalhado e execução eficiente para transformar seu espaço.',
+        card3_tit: 'Construção Comercial', card3_txt: 'Galpões, lojas e escritórios prontos para o seu negócio, focando em funcionalidade e design.',
+        card4_tit: 'Acabamento e Pintura', card4_txt: 'Pintura interna, externa e revestimentos decorativos com materiais de primeiríssima qualidade.',
+        card5_tit: 'Instalações Elétricas e Hidráulicas', card5_txt: 'Projetos e manutenção com materiais certificados e profissionais altamente qualificados.',
+        card6_tit: 'Projetos e Consultoria', card6_txt: 'Acompanhamento técnico especializado do projeto à entrega final da obra.'
     };
 
     var defaultPortfolio = [
@@ -179,6 +185,17 @@
                 var pi = projSec.querySelector('.video-box:nth-child(' + i + ') img');
                 var si = md['proj' + i + '_img'];
                 if (pi && si) pi.src = si;
+            }
+        }
+
+        var svcCards = $$('#section-2 .svc-card');
+        if (svcCards.length >= 6) {
+            for (var c = 1; c <= 6; c++) {
+                var card = svcCards[c - 1];
+                var h4 = card.querySelector('h4');
+                var p = card.querySelector('p');
+                if (h4 && md['card' + c + '_tit']) h4.innerText = md['card' + c + '_tit'];
+                if (p && md['card' + c + '_txt']) p.innerHTML = md['card' + c + '_txt'];
             }
         }
 

@@ -121,6 +121,7 @@
             <li><a href="#" class="nav-link active" data-target="geral"><i class="fas fa-cog"></i> Config. Gerais</a></li>
             <li><a href="#" class="nav-link" data-target="inicio"><i class="fas fa-home"></i> Início (Banner)</a></li>
             <li><a href="#" class="nav-link" data-target="servicos"><i class="fas fa-hammer"></i> Serviços</a></li>
+            <li><a href="#" class="nav-link" data-target="cards"><i class="fas fa-th-large"></i> Cards de Serviços</a></li>
             <li><a href="#" class="nav-link" data-target="projetos"><i class="fas fa-folder-open"></i> Projetos Recentes</a></li>
             <li><a href="#" class="nav-link" data-target="portfolio"><i class="fas fa-images"></i> Portfólio</a></li>
             <li><a href="#" class="nav-link" data-target="sobre"><i class="fas fa-info-circle"></i> Sobre Nós</a></li>
@@ -327,6 +328,108 @@
             </div>
         </div>
 
+        <!-- CARDS DE SERVIÇOS -->
+        <div id="cards" class="section-panel">
+            <h3><i class="fas fa-th-large"></i> Cards de Serviços</h3>
+            <p>Edite os 6 cards que aparecem abaixo da seção Serviços no site principal.</p>
+
+            <!-- Card 1 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-home"></i> Card 1</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card1_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card1_tit" placeholder="Ex: Construção Residencial"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card1_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card1_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card1_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-tools"></i> Card 2</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card2_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card2_tit" placeholder="Ex: Reformas e Ampliações"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card2_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card2_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card2_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-building"></i> Card 3</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card3_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card3_tit" placeholder="Ex: Construção Comercial"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card3_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card3_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card3_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-paint-roller"></i> Card 4</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card4_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card4_tit" placeholder="Ex: Acabamento e Pintura"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card4_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card4_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card4_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-bolt"></i> Card 5</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card5_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card5_tit" placeholder="Ex: Instalações Elétricas e Hidráulicas"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card5_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card5_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card5_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="slide-block">
+                <h4><i class="fas fa-clipboard-list"></i> Card 6</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('card6_tit')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="card6_tit" placeholder="Ex: Projetos e Consultoria"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card6_txt')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="card6_txt"></div>
+                        <div class="editor-content" contenteditable="true" id="card6_txt" data-placeholder="Descrição do card..."></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- PROJETOS RECENTES -->
         <div id="projetos" class="section-panel">
             <h3><i class="fas fa-folder-open"></i> Projetos Recentes</h3>
@@ -509,7 +612,13 @@ var defaultConfig = {
     cta_tit:'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',cta_sub:'Estamos sempre empenhados em ajudar nossos clientes em cada projeto.',
     cta_img:'wp-content/themes/nobislux/images/bg-01.jpg',
     contato_end:'Lisboa — Portugal',contato_tel:'+351 934 627 192',contato_email:'contato@mcpconstrucoes.pt',
-    contato_hr:'Seg–Sex: 08h às 18h',footer_desc:'Mais de 15 anos entregando obras com qualidade, prazo e compromisso.'
+    contato_hr:'Seg–Sex: 08h às 18h',footer_desc:'Mais de 15 anos entregando obras com qualidade, prazo e compromisso.',
+    card1_tit:'Construção Residencial',card1_txt:'Casas, apartamentos e condomínios com acabamento de alto padrão e projetos personalizados.',
+    card2_tit:'Reformas e Ampliações',card2_txt:'Reformas completas com planejamento detalhado e execução eficiente para transformar seu espaço.',
+    card3_tit:'Construção Comercial',card3_txt:'Galpões, lojas e escritórios prontos para o seu negócio, focando em funcionalidade e design.',
+    card4_tit:'Acabamento e Pintura',card4_txt:'Pintura interna, externa e revestimentos decorativos com materiais de primeiríssima qualidade.',
+    card5_tit:'Instalações Elétricas e Hidráulicas',card5_txt:'Projetos e manutenção com materiais certificados e profissionais altamente qualificados.',
+    card6_tit:'Projetos e Consultoria',card6_txt:'Acompanhamento técnico especializado do projeto à entrega final da obra.'
 };
 
 var defaultPortfolio = [
@@ -522,7 +631,7 @@ var defaultPortfolio = [
 ];
 
 /* ===== RICH TEXT EDITOR TOOLBAR ===== */
-var editorTargets = ['serv_txt1','serv_txt2','sobre_txt'];
+var editorTargets = ['serv_txt1','serv_txt2','sobre_txt','card1_txt','card2_txt','card3_txt','card4_txt','card5_txt','card6_txt'];
 
 function buildToolbars() {
     for (var i = 0; i < editorTargets.length; i++) {
