@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,1065 +7,842 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --gold: #c8a96e;
-            --dark: #111;
-            --bg: #f4f4f4;
-            --text: #333;
-        }
+        :root { --gold: #c8a96e; --dark: #111; --bg: #f4f4f4; --text: #333; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text); }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            color: var(--text);
-        }
+        /* LOGIN */
+        #login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #111, #333); }
+        .login-box { background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
+        .login-box h2 { margin-bottom: 20px; color: var(--dark); }
+        .login-box input { width: calc(100% - 24px); padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .login-box button { width: 100%; padding: 12px; background: var(--gold); color: var(--dark); border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .login-box button:hover { background: #a8893e; color: #fff; }
+        .error-msg { color: red; font-size: 12px; margin-bottom: 10px; display: none; }
 
-        #login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #111, #333);
-        }
+        /* ADMIN */
+        #admin-panel { display: flex; min-height: 100vh; }
+        .hidden { display: none !important; }
+        .sidebar { width: 250px; background: var(--dark); color: #fff; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #333; }
+        .sidebar-header h3 { margin: 0; color: var(--gold); }
+        .nav-menu { list-style: none; padding: 0; margin: 0; }
+        .nav-menu li { border-bottom: 1px solid #222; }
+        .nav-menu a { display: block; padding: 15px 20px; color: #ccc; text-decoration: none; transition: 0.3s; }
+        .nav-menu a:hover, .nav-menu a.active { background: var(--gold); color: var(--dark); }
+        .nav-menu a i { margin-right: 10px; width: 20px; text-align: center; }
+        .logout-btn { margin-top: auto; padding: 15px; background: #d32f2f; color: white; text-align: center; text-decoration: none; cursor: pointer; }
 
-        .login-box {
-            background: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
+        .main-content { flex: 1; margin-left: 250px; padding: 30px; overflow-y: auto; min-height: 100vh; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 10px; }
+        .header-bar h2 { margin: 0; font-size: 1.2rem; }
+        .btn { padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; border: none; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-gold { background: var(--gold); color: var(--dark); }
+        .btn-gold:hover { background: #a8893e; color: #fff; }
+        .btn-blue { background: #2196F3; color: #fff; }
+        .btn-blue:hover { background: #1976D2; }
+        .btn-gray { background: #555; color: #fff; }
+        .btn-red { background: #e74c3c; color: #fff; }
+        .btn-red:hover { background: #c0392b; }
+        .btn-green { background: #27ae60; color: #fff; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        .login-box h2 {
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
+        .section-panel { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; display: none; }
+        .section-panel.active { display: block; }
+        .section-panel h3 { margin-top: 0; color: var(--dark); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
 
-        .login-box input {
-            width: calc(100% - 24px);
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
+        .field-block { border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; position: relative; transition: 0.3s; }
+        .field-block:hover { border-color: var(--gold); box-shadow: 0 2px 8px rgba(200,169,110,0.2); }
+        .field-block .field-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .field-block .field-label { font-weight: 600; color: var(--dark); font-size: 14px; }
+        .field-block .field-actions { display: flex; gap: 6px; }
 
-        .login-box button {
-            width: 100%;
-            padding: 12px;
-            background: var(--gold);
-            color: var(--dark);
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--dark); font-size: 13px; }
+        .form-group input[type="text"], .form-group input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Poppins', sans-serif; font-size: 14px; }
+        .form-group input[type="range"] { width: 100%; }
 
-        .login-box button:hover {
-            background: #a8893e;
-            color: #fff;
-        }
+        /* RICH TEXT EDITOR */
+        .editor-wrapper { border: 1px solid #ddd; border-radius: 5px; overflow: hidden; background: #fff; }
+        .editor-toolbar { display: flex; flex-wrap: wrap; gap: 2px; padding: 8px; background: #f8f8f8; border-bottom: 1px solid #ddd; align-items: center; }
+        .editor-toolbar button { width: 32px; height: 32px; border: 1px solid transparent; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #333; transition: 0.2s; }
+        .editor-toolbar button:hover { background: #e8e8e8; border-color: #ccc; }
+        .editor-toolbar button.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+        .editor-toolbar select { height: 32px; border: 1px solid #ddd; border-radius: 4px; padding: 0 6px; font-size: 12px; cursor: pointer; background: #fff; }
+        .editor-toolbar input[type="color"] { width: 32px; height: 32px; border: none; padding: 0; cursor: pointer; border-radius: 4px; }
+        .editor-toolbar .sep { width: 1px; height: 24px; background: #ddd; margin: 0 4px; }
+        .editor-content { min-height: 120px; padding: 12px; outline: none; font-size: 14px; line-height: 1.6; }
+        .editor-content:empty::before { content: attr(data-placeholder); color: #aaa; }
 
-        .error-msg {
-            color: red;
-            font-size: 12px;
-            margin-bottom: 10px;
-            display: none;
-        }
+        /* IMAGE UPLOAD */
+        .upload-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+        .upload-row input[type="file"] { padding: 8px; border: 1px solid #ddd; border-radius: 5px; flex: 1; min-width: 150px; background: #fff; cursor: pointer; }
+        .upload-row input[type="text"] { flex: 2; min-width: 200px; }
+        .img-preview { max-width: 100%; max-height: 200px; display: block; margin-top: 10px; border-radius: 5px; border: 1px dashed #ccc; background: #eee; padding: 5px; }
+        .img-preview.hidden { display: none; }
 
-        #admin-panel {
-            display: flex;
-            min-height: 100vh;
-        }
+        /* PORTFOLIO */
+        .port-item { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 15px; background: #fafafa; }
+        .port-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 
-        .hidden {
-            display: none !important;
-        }
+        /* NOTIFICATION */
+        .notification { position: fixed; top: 20px; right: 20px; background: #4caf50; color: white; padding: 15px 25px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s; opacity: 0; visibility: hidden; z-index: 9999; max-width: 400px; }
+        .notification.show { opacity: 1; visibility: visible; }
 
-        .sidebar {
-            width: 250px;
-            background: var(--dark);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .sidebar-header h3 {
-            margin: 0;
-            color: var(--gold);
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu li {
-            border-bottom: 1px solid #222;
-        }
-
-        .nav-menu a {
-            display: block;
-            padding: 15px 20px;
-            color: #ccc;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .nav-menu a:hover,
-        .nav-menu a.active {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
-        .nav-menu a i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .logout-btn {
-            margin-top: auto;
-            padding: 15px;
-            background: #d32f2f;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 30px;
-            overflow-y: auto;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .header-bar h2 {
-            margin: 0;
-        }
-
-        .btn-save {
-            background: var(--gold);
-            color: var(--dark);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-
-        .btn-save:hover {
-            background: #a8893e;
-            color: #fff;
-        }
-
-        .section-panel {
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-            display: none;
-        }
-
-        .section-panel.active {
-            display: block;
-        }
-
-        .sub-block {
-            border: 1px solid #eee;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background: #fafafa;
-        }
-
-        .sub-block h4 {
-            margin-top: 0;
-            color: var(--gold);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .image-preview {
-            max-width: 100%;
-            max-height: 150px;
-            display: block;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px dashed #ccc;
-            background: #fff;
-        }
-
-        .upload-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        .upload-row input[type="file"] {
-            padding: 9px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            flex: 1;
-            min-width: 200px;
-            background: #fff;
-            cursor: pointer;
-        }
-
-        .upload-row input[type="text"] {
-            flex: 2;
-            min-width: 200px;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4caf50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-        }
-
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        /* SLIDE BLOCK */
+        .slide-block { border: 2px solid #e0d5c5; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #fffdf8; }
+        .slide-block h4 { margin: 0 0 15px 0; color: var(--gold); display: flex; align-items: center; gap: 8px; }
 
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            #admin-panel {
-                flex-direction: column;
-            }
+            .sidebar { width: 100%; position: relative; }
+            .main-content { margin-left: 0; }
+            #admin-panel { flex-direction: column; }
+            .header-bar { flex-direction: column; align-items: stretch; }
+            .header-bar > div { display: flex; flex-wrap: wrap; gap: 8px; }
         }
     </style>
 </head>
-
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h2><span style="color:var(--gold)">MCP</span> Admin</h2>
-            <div class="error-msg" id="login-error">Credenciais inválidas!</div>
-            <input type="email" id="login-email" placeholder="E-mail" required>
-            <input type="password" id="login-pass" placeholder="Senha" required>
-            <button onclick="realizarLogin()">Entrar</button>
-        </div>
+<div id="login-screen">
+    <div class="login-box">
+        <h2><span style="color:var(--gold)">MCP</span> Admin</h2>
+        <div class="error-msg" id="login-error">Credenciais inválidas!</div>
+        <input type="email" id="login-email" placeholder="E-mail">
+        <input type="password" id="login-pass" placeholder="Senha">
+        <button onclick="realizarLogin()">Entrar</button>
+    </div>
+</div>
+
+<div id="admin-panel" class="hidden">
+    <div class="sidebar">
+        <div class="sidebar-header"><h3>Painel Admin</h3></div>
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link active" data-target="geral"><i class="fas fa-cog"></i> Config. Gerais</a></li>
+            <li><a href="#" class="nav-link" data-target="inicio"><i class="fas fa-home"></i> Início (Banner)</a></li>
+            <li><a href="#" class="nav-link" data-target="servicos"><i class="fas fa-hammer"></i> Serviços</a></li>
+            <li><a href="#" class="nav-link" data-target="projetos"><i class="fas fa-folder-open"></i> Projetos Recentes</a></li>
+            <li><a href="#" class="nav-link" data-target="portfolio"><i class="fas fa-images"></i> Portfólio</a></li>
+            <li><a href="#" class="nav-link" data-target="sobre"><i class="fas fa-info-circle"></i> Sobre Nós</a></li>
+            <li><a href="#" class="nav-link" data-target="cta"><i class="fas fa-bullhorn"></i> Banner CTA</a></li>
+            <li><a href="#" class="nav-link" data-target="contatos"><i class="fas fa-address-book"></i> Contatos</a></li>
+        </ul>
+        <a href="#" class="logout-btn" onclick="realizarLogout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
     </div>
 
-    <div id="admin-panel" class="hidden">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h3>Painel Admin</h3>
+    <div class="main-content">
+        <div class="header-bar">
+            <h2 id="current-section-title">Configurações Gerais</h2>
+            <div>
+                <a href="index.html" target="_blank" class="btn btn-gray"><i class="fas fa-eye"></i> Ver Site</a>
+                <button class="btn btn-blue" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar</button>
+                <button class="btn btn-gold" onclick="salvarAlteracoes()"><i class="fas fa-save"></i> Salvar Tudo</button>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#" class="nav-link active" data-target="geral"><i class="fas fa-cog"></i> Config. Gerais</a></li>
-                <li><a href="#" class="nav-link" data-target="inicio"><i class="fas fa-home"></i> Início (Banner)</a></li>
-                <li><a href="#" class="nav-link" data-target="servicos"><i class="fas fa-hammer"></i> Serviços</a></li>
-                <li><a href="#" class="nav-link" data-target="projetos"><i class="fas fa-folder-open"></i> Projetos Recentes</a></li>
-                <li><a href="#" class="nav-link" data-target="portfolio"><i class="fas fa-images"></i> Portfólio</a></li>
-                <li><a href="#" class="nav-link" data-target="sobre"><i class="fas fa-info-circle"></i> Sobre Nós</a></li>
-                <li><a href="#" class="nav-link" data-target="cta"><i class="fas fa-bullhorn"></i> Banner CTA</a></li>
-                <li><a href="#" class="nav-link" data-target="contatos"><i class="fas fa-address-book"></i> Contatos</a></li>
-            </ul>
-            <a href="#" class="logout-btn" onclick="realizarLogout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
 
-        <div class="main-content">
-            <div class="header-bar">
-                <h2 id="current-section-title">Configurações Gerais</h2>
-                <div>
-                    <a href="index.html" target="_blank" class="btn-save" style="background:#555; color:white; text-decoration:none; margin-right:10px;">Ver Site</a>
-                    <button class="btn-save" style="background:#2196F3; margin-right:10px;" onclick="exportarDados()"><i class="fas fa-download"></i> Exportar</button>
-                    <button class="btn-save" onclick="salvarAlteracoes()"><i class="fas fa-save"></i> Salvar Alterações</button>
+        <!-- GERAL / LOGO -->
+        <div id="geral" class="section-panel active">
+            <h3><i class="fas fa-cog"></i> Configurações Gerais</h3>
+            <div class="field-block">
+                <div class="field-header">
+                    <span class="field-label"><i class="fas fa-image"></i> Logotipo Principal</span>
+                    <div class="field-actions">
+                        <button class="btn btn-sm btn-red" onclick="clearField('logo_img')"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
+                <div class="upload-row">
+                    <input type="file" accept="image/*" onchange="handleUpload(this,'logo_img')">
+                    <input type="text" id="logo_img" placeholder="Ou cole a URL da imagem" oninput="previewImg('logo_img','prev_logo')">
+                </div>
+                <img id="prev_logo" class="img-preview hidden" src="">
             </div>
-
-            <!-- GERAL / LOGO -->
-            <div id="geral" class="section-panel active">
-                <h3>Configurações Gerais</h3>
-                <div class="sub-block">
-                    <h4>Logotipo Principal (Imagem)</h4>
-                    <p style="font-size:0.85rem; color:#666; margin-top:-5px;">Faça upload da sua logo ou cole uma URL. Ajuste o tamanho de exibição no cabeçalho.</p>
-                    <div class="form-group">
-                        <label>Upload / URL da Logo</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'logo_img')">
-                            <input type="text" id="logo_img" placeholder="Ou cole a URL da imagem aqui" oninput="previewImg('logo_img', 'prev_logo')">
-                        </div>
-                        <img id="prev_logo" class="image-preview" src="" style="background:#eee; padding:10px; border-radius:10px; max-width:200px; display:none;">
-                    </div>
-                    <div class="form-group">
-                        <label>Tamanho da Logo (Altura em Pixels): <strong id="logo_size_val">55px</strong></label>
-                        <input type="range" id="logo_size" min="30" max="150" value="55" step="5" oninput="document.getElementById('logo_size_val').innerText = this.value + 'px'">
-                    </div>
+            <div class="field-block">
+                <div class="field-header">
+                    <span class="field-label"><i class="fas fa-text-width"></i> Tamanho da Logo</span>
                 </div>
-                <div class="sub-block">
-                    <h4>Logo em Texto (Reserva)</h4>
-                    <div class="form-group">
-                        <label>Logo Texto Principal</label>
-                        <input type="text" id="logo_texto_1" placeholder="Ex: MCP">
-                    </div>
-                    <div class="form-group">
-                        <label>Logo Texto Destaque (Dourado)</label>
-                        <input type="text" id="logo_texto_2" placeholder="Ex: Construções">
-                    </div>
-                    <div class="form-group">
-                        <label>Logo Subtítulo</label>
-                        <input type="text" id="logo_sub" placeholder="Ex: Engenharia e Obras">
-                    </div>
-                </div>
+                <label>Altura: <strong id="logo_size_val">55px</strong></label>
+                <input type="range" id="logo_size" min="30" max="150" value="55" step="5" oninput="document.getElementById('logo_size_val').innerText=this.value+'px'">
             </div>
-
-            <!-- INÍCIO (BANNER) -->
-            <div id="inicio" class="section-panel">
-                <h3>Seção Início (Banner)</h3>
-                <div class="sub-block">
-                    <h4>Slide 1</h4>
-                    <div class="form-group">
-                        <label>Título Principal</label>
-                        <input type="text" id="slide1_tit1" placeholder="Ex: Construção Civil">
-                        <label style="margin-top:10px;">Título Destacado (Dourado)</label>
-                        <input type="text" id="slide1_tit2" placeholder="Ex: de Alto Padrão">
-                    </div>
-                    <div class="form-group">
-                        <label>Subtítulo</label>
-                        <input type="text" id="slide1_sub" placeholder="Ex: Mais de 15 anos construindo...">
-                    </div>
-                    <div class="form-group">
-                        <label>Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'slide1_img')">
-                            <input type="text" id="slide1_img" placeholder="URL da imagem" oninput="previewImg('slide1_img', 'prev_slide1')">
-                        </div>
-                        <img id="prev_slide1" class="image-preview" src="" style="display:none;">
+            <div class="field-block">
+                <div class="field-header">
+                    <span class="field-label"><i class="fas fa-font"></i> Logo em Texto</span>
+                    <div class="field-actions">
+                        <button class="btn btn-sm btn-red" onclick="clearField('logo_texto_1');clearField('logo_texto_2');clearField('logo_sub')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
-                <div class="sub-block">
-                    <h4>Slide 2</h4>
-                    <div class="form-group">
-                        <label>Título Principal</label>
-                        <input type="text" id="slide2_tit1" placeholder="Ex: Obras Residenciais">
-                        <label style="margin-top:10px;">Título Destacado</label>
-                        <input type="text" id="slide2_tit2" placeholder="Ex: e Comerciais">
-                    </div>
-                    <div class="form-group">
-                        <label>Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'slide2_img')">
-                            <input type="text" id="slide2_img" placeholder="URL da imagem" oninput="previewImg('slide2_img', 'prev_slide2')">
-                        </div>
-                        <img id="prev_slide2" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-                <div class="sub-block">
-                    <h4>Slide 3</h4>
-                    <div class="form-group">
-                        <label>Título Principal</label>
-                        <input type="text" id="slide3_tit1" placeholder="Ex: Reformas e">
-                        <label style="margin-top:10px;">Título Destacado</label>
-                        <input type="text" id="slide3_tit2" placeholder="Ex: Ampliações">
-                    </div>
-                    <div class="form-group">
-                        <label>Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'slide3_img')">
-                            <input type="text" id="slide3_img" placeholder="URL da imagem" oninput="previewImg('slide3_img', 'prev_slide3')">
-                        </div>
-                        <img id="prev_slide3" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-                <div class="sub-block">
-                    <h4>Slide 4</h4>
-                    <div class="form-group">
-                        <label>Título Principal</label>
-                        <input type="text" id="slide4_tit1" placeholder="Ex: Galpões e">
-                        <label style="margin-top:10px;">Título Destacado</label>
-                        <input type="text" id="slide4_tit2" placeholder="Ex: Construção Industrial">
-                    </div>
-                    <div class="form-group">
-                        <label>Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'slide4_img')">
-                            <input type="text" id="slide4_img" placeholder="URL da imagem" oninput="previewImg('slide4_img', 'prev_slide4')">
-                        </div>
-                        <img id="prev_slide4" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label>Texto Secundário Animado (Estatísticas / Banner Azul)</label>
-                    <input type="text" id="stats_text" placeholder="Ex: NA MCP CONSTRUÇÕES, CADA DETALHE...">
-                </div>
+                <div class="form-group"><label>Texto Principal</label><input type="text" id="logo_texto_1" placeholder="Ex: MCP"></div>
+                <div class="form-group"><label>Texto Destaque (Dourado)</label><input type="text" id="logo_texto_2" placeholder="Ex: Construções"></div>
+                <div class="form-group"><label>Subtítulo</label><input type="text" id="logo_sub" placeholder="Ex: Engenharia e Obras"></div>
             </div>
+        </div>
 
-            <!-- SERVIÇOS -->
-            <div id="servicos" class="section-panel">
-                <h3>Seção Serviços</h3>
-                <div class="sub-block">
-                    <h4>Bloco 1</h4>
-                    <div class="form-group">
-                        <label>Título Bloco 1</label>
-                        <input type="text" id="serv_tit1" placeholder="Construção Residencial">
-                    </div>
-                    <div class="form-group">
-                        <label>Texto Bloco 1</label>
-                        <textarea id="serv_txt1"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Upload de Imagem Bloco 1</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'serv_img1')">
-                            <input type="text" id="serv_img1" placeholder="URL da imagem" oninput="previewImg('serv_img1', 'prev_serv1')">
-                        </div>
-                        <img id="prev_serv1" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-                <div class="sub-block">
-                    <h4>Bloco 2</h4>
-                    <div class="form-group">
-                        <label>Título Bloco 2</label>
-                        <input type="text" id="serv_tit2" placeholder="Obras Comerciais e Industriais">
-                    </div>
-                    <div class="form-group">
-                        <label>Texto Bloco 2</label>
-                        <textarea id="serv_txt2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Upload de Imagem Bloco 2</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'serv_img2')">
-                            <input type="text" id="serv_img2" placeholder="URL da imagem" oninput="previewImg('serv_img2', 'prev_serv2')">
-                        </div>
-                        <img id="prev_serv2" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-            </div>
+        <!-- INÍCIO (BANNER) -->
+        <div id="inicio" class="section-panel">
+            <h3><i class="fas fa-home"></i> Início (Banner)</h3>
 
-            <!-- PROJETOS RECENTES -->
-            <div id="projetos" class="section-panel">
-                <h3>Seção Projetos Recentes</h3>
-                <div class="form-group">
-                    <label>Título da Seção</label>
-                    <input type="text" id="proj_tit" placeholder="Ex: PROJETOS RECENTES">
-                </div>
-                <div class="sub-block">
-                    <h4>Projeto 1</h4>
-                    <div class="form-group">
-                        <label>Nome do Projeto</label>
-                        <input type="text" id="proj1_nome" placeholder="Residencial Vila Nova">
-                        <label style="margin-top:10px;">Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'proj1_img')">
-                            <input type="text" id="proj1_img" placeholder="URL da imagem" oninput="previewImg('proj1_img', 'prev_proj1')">
+            <div class="slide-block">
+                <h4><i class="fas fa-layer-group"></i> Slide 1</h4>
+                <div class="field-block">
+                    <div class="field-header">
+                        <span class="field-label">Título do Slide</span>
+                        <div class="field-actions">
+                            <button class="btn btn-sm btn-red" onclick="clearField('slide1_tit1');clearField('slide1_tit2')"><i class="fas fa-trash"></i></button>
                         </div>
-                        <img id="prev_proj1" class="image-preview" src="" style="display:none;">
                     </div>
+                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide1_tit1" placeholder="Ex: Construção Civil"></div>
+                    <div class="form-group"><label>Título Destacado (Dourado)</label><input type="text" id="slide1_tit2" placeholder="Ex: de Alto Padrão"></div>
                 </div>
-                <div class="sub-block">
-                    <h4>Projeto 2</h4>
-                    <div class="form-group">
-                        <label>Nome do Projeto</label>
-                        <input type="text" id="proj2_nome" placeholder="Centro Empresarial">
-                        <label style="margin-top:10px;">Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'proj2_img')">
-                            <input type="text" id="proj2_img" placeholder="URL da imagem" oninput="previewImg('proj2_img', 'prev_proj2')">
+                <div class="field-block">
+                    <div class="field-header">
+                        <span class="field-label">Subtítulo</span>
+                        <div class="field-actions">
+                            <button class="btn btn-sm btn-red" onclick="clearField('slide1_sub')"><i class="fas fa-trash"></i></button>
                         </div>
-                        <img id="prev_proj2" class="image-preview" src="" style="display:none;">
                     </div>
+                    <div class="form-group"><label>Texto</label><input type="text" id="slide1_sub" placeholder="Descrição do slide"></div>
                 </div>
-                <div class="sub-block">
-                    <h4>Projeto 3</h4>
-                    <div class="form-group">
-                        <label>Nome do Projeto</label>
-                        <input type="text" id="proj3_nome" placeholder="Muro de Arrimo">
-                        <label style="margin-top:10px;">Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'proj3_img')">
-                            <input type="text" id="proj3_img" placeholder="URL da imagem" oninput="previewImg('proj3_img', 'prev_proj3')">
+                <div class="field-block">
+                    <div class="field-header">
+                        <span class="field-label"><i class="fas fa-image"></i> Imagem de Fundo</span>
+                        <div class="field-actions">
+                            <button class="btn btn-sm btn-red" onclick="clearField('slide1_img')"><i class="fas fa-trash"></i></button>
                         </div>
-                        <img id="prev_proj3" class="image-preview" src="" style="display:none;">
                     </div>
-                </div>
-                <div class="sub-block">
-                    <h4>Projeto 4</h4>
-                    <div class="form-group">
-                        <label>Nome do Projeto</label>
-                        <input type="text" id="proj4_nome" placeholder="Projeto Comercial">
-                        <label style="margin-top:10px;">Upload ou URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleUpload(this, 'proj4_img')">
-                            <input type="text" id="proj4_img" placeholder="URL da imagem" oninput="previewImg('proj4_img', 'prev_proj4')">
-                        </div>
-                        <img id="prev_proj4" class="image-preview" src="" style="display:none;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- PORTFÓLIO -->
-            <div id="portfolio" class="section-panel">
-                <h3>Menu Portfólio (Fotos)</h3>
-                <p>Adicione fotos que aparecerão na guia de Portfólio. As fotos ganham categorias: Residencial, Comercial, Industrial, Reforma, Acabamento e também o filtro "Todos".</p>
-                <div class="header-bar" style="position:static; padding:15px; margin-bottom:20px; box-shadow:none; border:1px solid #ddd;">
-                    <h4 style="margin:0;">Projetos Cadastrados</h4>
-                    <button type="button" class="btn-save" onclick="addPortItem()"><i class="fas fa-plus"></i> Adicionar Projeto</button>
-                </div>
-                <div id="portfolio-container"></div>
-            </div>
-
-            <!-- SOBRE NÓS -->
-            <div id="sobre" class="section-panel">
-                <h3>Seção Sobre Nós</h3>
-                <div class="form-group">
-                    <label>Título</label>
-                    <input type="text" id="sobre_tit" placeholder="Sobre Nós">
-                </div>
-                <div class="form-group">
-                    <label>Texto Completo (aceita HTML)</label>
-                    <textarea id="sobre_txt"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Upload da Imagem</label>
                     <div class="upload-row">
-                        <input type="file" accept="image/*" onchange="handleUpload(this, 'sobre_img')">
-                        <input type="text" id="sobre_img" placeholder="URL da imagem" oninput="previewImg('sobre_img', 'prev_sobre')">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide1_img')">
+                        <input type="text" id="slide1_img" placeholder="URL da imagem" oninput="previewImg('slide1_img','prev_slide1')">
                     </div>
-                    <img id="prev_sobre" class="image-preview" src="" style="display:none;">
+                    <img id="prev_slide1" class="img-preview hidden" src="">
                 </div>
             </div>
 
-            <!-- CONTATOS -->
-            <div id="contatos" class="section-panel">
-                <h3>Informações de Contato</h3>
-                <div class="form-group">
-                    <label>Endereço</label>
-                    <input type="text" id="contato_end" placeholder="Lisboa — Portugal">
+            <div class="slide-block">
+                <h4><i class="fas fa-layer-group"></i> Slide 2</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide2_tit1');clearField('slide2_tit2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide2_tit1" placeholder="Ex: Obras Residenciais"></div>
+                    <div class="form-group"><label>Título Destacado</label><input type="text" id="slide2_tit2" placeholder="Ex: e Comerciais"></div>
                 </div>
-                <div class="form-group">
-                    <label>Telefone</label>
-                    <input type="text" id="contato_tel" placeholder="+351 934 627 192">
-                </div>
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="text" id="contato_email" placeholder="contato@mcpconstrucoes.pt">
-                </div>
-                <div class="form-group">
-                    <label>Horário</label>
-                    <input type="text" id="contato_hr" placeholder="Seg–Sex: 08h às 18h">
-                </div>
-                <div class="sub-block">
-                    <h4>Informações Extra do Rodapé (Footer)</h4>
-                    <div class="form-group">
-                        <label>Pequeno texto de descrição no rodapé</label>
-                        <input type="text" id="footer_desc" placeholder="Ex: Mais de 15 anos entregando obras...">
-                    </div>
-                </div>
-            </div>
-
-            <!-- CTA BANNER -->
-            <div id="cta" class="section-panel">
-                <h3>Banner Chamada para Ação (Final da Página)</h3>
-                <div class="form-group">
-                    <label>Título do Banner</label>
-                    <input type="text" id="cta_tit" placeholder="Ex: NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.">
-                </div>
-                <div class="form-group">
-                    <label>Subtítulo do Banner</label>
-                    <input type="text" id="cta_sub" placeholder="Ex: Estamos sempre empenhados em ajudar nossos clientes.">
-                </div>
-                <div class="form-group">
-                    <label>Imagem de Fundo (Background)</label>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide2_img')"><i class="fas fa-trash"></i></button></div></div>
                     <div class="upload-row">
-                        <input type="file" accept="image/*" onchange="handleUpload(this, 'cta_img')">
-                        <input type="text" id="cta_img" placeholder="URL da imagem" oninput="previewImg('cta_img', 'prev_cta')">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide2_img')">
+                        <input type="text" id="slide2_img" placeholder="URL da imagem" oninput="previewImg('slide2_img','prev_slide2')">
                     </div>
-                    <img id="prev_cta" class="image-preview" src="" style="display:none;">
+                    <img id="prev_slide2" class="img-preview hidden" src="">
                 </div>
             </div>
 
+            <div class="slide-block">
+                <h4><i class="fas fa-layer-group"></i> Slide 3</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide3_tit1');clearField('slide3_tit2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide3_tit1" placeholder="Ex: Reformas e"></div>
+                    <div class="form-group"><label>Título Destacado</label><input type="text" id="slide3_tit2" placeholder="Ex: Ampliações"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide3_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide3_img')">
+                        <input type="text" id="slide3_img" placeholder="URL da imagem" oninput="previewImg('slide3_img','prev_slide3')">
+                    </div>
+                    <img id="prev_slide3" class="img-preview hidden" src="">
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <h4><i class="fas fa-layer-group"></i> Slide 4</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide4_tit1');clearField('slide4_tit2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide4_tit1" placeholder="Ex: Galpões e"></div>
+                    <div class="form-group"><label>Título Destacado</label><input type="text" id="slide4_tit2" placeholder="Ex: Construção Industrial"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide4_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide4_img')">
+                        <input type="text" id="slide4_img" placeholder="URL da imagem" oninput="previewImg('slide4_img','prev_slide4')">
+                    </div>
+                    <img id="prev_slide4" class="img-preview hidden" src="">
+                </div>
+            </div>
+
+            <div class="field-block">
+                <div class="field-header">
+                    <span class="field-label"><i class="fas fa-typewriter"></i> Texto Animado (Estatísticas)</span>
+                    <div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('stats_text')"><i class="fas fa-trash"></i></button></div>
+                </div>
+                <div class="form-group"><label>Texto</label><input type="text" id="stats_text" placeholder="Ex: NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE."></div>
+            </div>
+        </div>
+
+        <!-- SERVIÇOS -->
+        <div id="servicos" class="section-panel">
+            <h3><i class="fas fa-hammer"></i> Serviços</h3>
+
+            <div class="slide-block">
+                <h4><i class="fas fa-file-alt"></i> Bloco 1</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('serv_tit1')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="serv_tit1" placeholder="Ex: Construção Residencial"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Texto Descritivo</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('serv_txt1')"><i class="fas fa-trash"></i></button></div></div>
+                    <div id="editor_serv_txt1" class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="serv_txt1"></div>
+                        <div class="editor-content" contenteditable="true" id="serv_txt1" data-placeholder="Digite o texto aqui..."></div>
+                    </div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('serv_img1')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'serv_img1')">
+                        <input type="text" id="serv_img1" placeholder="URL da imagem" oninput="previewImg('serv_img1','prev_serv1')">
+                    </div>
+                    <img id="prev_serv1" class="img-preview hidden" src="">
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <h4><i class="fas fa-file-alt"></i> Bloco 2</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('serv_tit2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="serv_tit2" placeholder="Ex: Obras Comerciais e Industriais"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Texto Descritivo</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('serv_txt2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div id="editor_serv_txt2" class="editor-wrapper">
+                        <div class="editor-toolbar" data-target="serv_txt2"></div>
+                        <div class="editor-content" contenteditable="true" id="serv_txt2" data-placeholder="Digite o texto aqui..."></div>
+                    </div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('serv_img2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'serv_img2')">
+                        <input type="text" id="serv_img2" placeholder="URL da imagem" oninput="previewImg('serv_img2','prev_serv2')">
+                    </div>
+                    <img id="prev_serv2" class="img-preview hidden" src="">
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJETOS RECENTES -->
+        <div id="projetos" class="section-panel">
+            <h3><i class="fas fa-folder-open"></i> Projetos Recentes</h3>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label">Título da Seção</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj_tit')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="proj_tit" placeholder="Ex: PROJETOS RECENTES"></div>
+            </div>
+            <div class="slide-block">
+                <h4>Projeto 1</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Nome</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj1_nome')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="proj1_nome" placeholder="Nome do projeto"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj1_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'proj1_img')">
+                        <input type="text" id="proj1_img" placeholder="URL da imagem" oninput="previewImg('proj1_img','prev_proj1')">
+                    </div>
+                    <img id="prev_proj1" class="img-preview hidden" src="">
+                </div>
+            </div>
+            <div class="slide-block">
+                <h4>Projeto 2</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Nome</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj2_nome')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="proj2_nome" placeholder="Nome do projeto"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj2_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'proj2_img')">
+                        <input type="text" id="proj2_img" placeholder="URL da imagem" oninput="previewImg('proj2_img','prev_proj2')">
+                    </div>
+                    <img id="prev_proj2" class="img-preview hidden" src="">
+                </div>
+            </div>
+            <div class="slide-block">
+                <h4>Projeto 3</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Nome</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj3_nome')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="proj3_nome" placeholder="Nome do projeto"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj3_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'proj3_img')">
+                        <input type="text" id="proj3_img" placeholder="URL da imagem" oninput="previewImg('proj3_img','prev_proj3')">
+                    </div>
+                    <img id="prev_proj3" class="img-preview hidden" src="">
+                </div>
+            </div>
+            <div class="slide-block">
+                <h4>Projeto 4</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Nome</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj4_nome')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><input type="text" id="proj4_nome" placeholder="Nome do projeto"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('proj4_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'proj4_img')">
+                        <input type="text" id="proj4_img" placeholder="URL da imagem" oninput="previewImg('proj4_img','prev_proj4')">
+                    </div>
+                    <img id="prev_proj4" class="img-preview hidden" src="">
+                </div>
+            </div>
+        </div>
+
+        <!-- PORTFÓLIO -->
+        <div id="portfolio" class="section-panel">
+            <h3><i class="fas fa-images"></i> Portfólio</h3>
+            <p>Adicione fotos com categorias: Residencial, Comercial, Industrial, Reforma, Acabamento.</p>
+            <div class="header-bar" style="position:static;padding:15px;margin-bottom:20px;box-shadow:none;border:1px solid #ddd;">
+                <h4 style="margin:0;">Projetos</h4>
+                <button class="btn btn-sm btn-green" onclick="addPortItem()"><i class="fas fa-plus"></i> Adicionar</button>
+            </div>
+            <div id="portfolio-container"></div>
+        </div>
+
+        <!-- SOBRE NÓS -->
+        <div id="sobre" class="section-panel">
+            <h3><i class="fas fa-info-circle"></i> Sobre Nós</h3>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('sobre_tit')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="sobre_tit" placeholder="Ex: Sobre Nós"></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Texto Completo</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('sobre_txt')"><i class="fas fa-trash"></i></button></div></div>
+                <div id="editor_sobre_txt" class="editor-wrapper">
+                    <div class="editor-toolbar" data-target="sobre_txt"></div>
+                    <div class="editor-content" contenteditable="true" id="sobre_txt" data-placeholder="Digite o texto sobre a empresa..."></div>
+                </div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('sobre_img')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="upload-row">
+                    <input type="file" accept="image/*" onchange="handleUpload(this,'sobre_img')">
+                    <input type="text" id="sobre_img" placeholder="URL da imagem" oninput="previewImg('sobre_img','prev_sobre')">
+                </div>
+                <img id="prev_sobre" class="img-preview hidden" src="">
+            </div>
+        </div>
+
+        <!-- CONTATOS -->
+        <div id="contatos" class="section-panel">
+            <h3><i class="fas fa-address-book"></i> Contatos</h3>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-map-marker-alt"></i> Endereço</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('contato_end')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="contato_end" placeholder="Lisboa — Portugal"></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-phone"></i> Telefone</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('contato_tel')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="contato_tel" placeholder="+351 934 627 192"></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-envelope"></i> E-mail</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('contato_email')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="contato_email" placeholder="contato@mcpconstrucoes.pt"></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-clock"></i> Horário</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('contato_hr')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="contato_hr" placeholder="Seg–Sex: 08h às 18h"></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-align-left"></i> Descrição do Rodapé</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('footer_desc')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="footer_desc" placeholder="Ex: Mais de 15 anos entregando obras..."></div>
+            </div>
+        </div>
+
+        <!-- CTA BANNER -->
+        <div id="cta" class="section-panel">
+            <h3><i class="fas fa-bullhorn"></i> Banner CTA</h3>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('cta_tit')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="cta_tit" placeholder="Ex: NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE."></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label">Subtítulo</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('cta_sub')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="form-group"><input type="text" id="cta_sub" placeholder="Ex: Estamos sempre empenhados em ajudar nossos clientes."></div>
+            </div>
+            <div class="field-block">
+                <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem de Fundo</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('cta_img')"><i class="fas fa-trash"></i></button></div></div>
+                <div class="upload-row">
+                    <input type="file" accept="image/*" onchange="handleUpload(this,'cta_img')">
+                    <input type="text" id="cta_img" placeholder="URL da imagem" oninput="previewImg('cta_img','prev_cta')">
+                </div>
+                <img id="prev_cta" class="img-preview hidden" src="">
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="notification" id="notif">Alterações salvas com sucesso!</div>
+<div class="notification" id="notif"></div>
 
-    <script>
-        const LOGIN_CORRETO = "vitoriaservicosdepintura@gmail.com";
-        const SENHA_CORRETA = "10203040";
+<script>
+var LOGIN_CORRETO = 'vitoriaservicosdepintura@gmail.com';
+var SENHA_CORRETA = '10203040';
+var API_URL = 'https://mpc-construcoes.vercel.app/api/site-data';
+var portfolioItems = [];
 
-        let portfolioItems = [];
+var defaultConfig = {
+    logo_img:'LOGO1.png',logo_size:'55',logo_texto_1:'MCP',logo_texto_2:'Construções',logo_sub:'Engenharia e Obras',
+    slide1_tit1:'Construção Civil',slide1_tit2:'de Alto Padrão',slide1_sub:'Mais de 15 anos construindo o futuro com excelência.',
+    slide1_img:'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&q=80',
+    slide2_tit1:'Obras Residenciais',slide2_tit2:'e Comerciais',slide2_img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80',
+    slide3_tit1:'Reformas e',slide3_tit2:'Ampliações',slide3_img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
+    slide4_tit1:'Galpões e',slide4_tit2:'Construção Industrial',slide4_img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+    stats_text:'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',
+    serv_tit1:'Construção Residencial',serv_txt1:'<p>A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados.</p>',
+    serv_img1:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80',
+    serv_tit2:'Obras Comerciais e Industriais',serv_txt2:'<p>Galpões, lojas, escritórios e estruturas industriais prontos para o seu negócio. Projetos sob medida com eficiência e qualidade.</p>',
+    serv_img2:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80',
+    proj_tit:'PROJETOS RECENTES',
+    proj1_nome:'Residencial Vila Nova',proj1_img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80',
+    proj2_nome:'Centro Empresarial',proj2_img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80',
+    proj3_nome:'Muro de Arrimo',proj3_img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80',
+    proj4_nome:'Projeto Comercial',proj4_img:'https://images.unsplash.com/photo-1545670723-196ed0954986?w=400&q=80',
+    sobre_tit:'Sobre Nós',sobre_txt:'<p>A MCP Construções nasceu da paixão por transformar projetos em realidade. Com mais de 15 anos de experiência no mercado da construção civil.</p>',
+    sobre_img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1000&q=80',
+    cta_tit:'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',cta_sub:'Estamos sempre empenhados em ajudar nossos clientes em cada projeto.',
+    cta_img:'wp-content/themes/nobislux/images/bg-01.jpg',
+    contato_end:'Lisboa — Portugal',contato_tel:'+351 934 627 192',contato_email:'contato@mcpconstrucoes.pt',
+    contato_hr:'Seg–Sex: 08h às 18h',footer_desc:'Mais de 15 anos entregando obras com qualidade, prazo e compromisso.'
+};
 
-        function renderPortfolio() {
-            const container = document.getElementById('portfolio-container');
-            container.innerHTML = '';
+var defaultPortfolio = [
+    {img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80',nome:'Residencial Vila Nova',categoria:'RESIDENCIAL'},
+    {img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80',nome:'Centro Empresarial Horizonte',categoria:'COMERCIAL'},
+    {img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80',nome:'Galpão Logístico LP-12',categoria:'INDUSTRIAL'},
+    {img:'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80',nome:'Casa Alto Padrão SP',categoria:'RESIDENCIAL, REFORMA'},
+    {img:'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&q=80',nome:'Escritório Corporativo Premium',categoria:'COMERCIAL, ACABAMENTO'},
+    {img:'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80',nome:'Reforma Completa Campinas',categoria:'REFORMA, ACABAMENTO'}
+];
 
-            if (portfolioItems.length === 0) {
-                container.innerHTML = '<p style="padding:20px; text-align:center; color:#666;">Nenhum projeto cadastrado. Clique em "Adicionar Projeto" para começar.</p>';
-                return;
-            }
+/* ===== RICH TEXT EDITOR TOOLBAR ===== */
+var editorTargets = ['serv_txt1','serv_txt2','sobre_txt'];
 
-            portfolioItems.forEach((item, index) => {
-                const hasImage = item.img && item.img.length > 0;
-                container.innerHTML += `
-                <div class="sub-block portfolio-item-block">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; margin-bottom:15px; padding-bottom:10px;">
-                        <h4 style="margin:0; border:none; padding:0;">Projeto ${index + 1}</h4>
-                        <button type="button" style="padding:6px 12px; margin:0; background:#e74c3c; color:#fff; border:none; border-radius:5px; cursor:pointer;" onclick="removePortItem(${index})"><i class="fas fa-trash"></i> Remover</button>
-                    </div>
-                    <div class="form-group">
-                        <label>Upload / URL da Imagem</label>
-                        <div class="upload-row">
-                            <input type="file" accept="image/*" onchange="handleDynUpload(this, ${index})">
-                            <input type="text" id="port_img_${index}" placeholder="URL da foto" value="${item.img || ''}" oninput="updatePortField(${index}, 'img', this.value); previewImg('port_img_${index}', 'prev_port_${index}')">
-                        </div>
-                        <label style="margin-top:10px;">Nome do Projeto</label>
-                        <input type="text" id="port_nome_${index}" placeholder="Ex: Residencial Vila Nova" value="${item.nome || ''}" oninput="updatePortField(${index}, 'nome', this.value)" style="margin-bottom:10px;">
-                        <label>Categoria (separadas por vírgula)</label>
-                        <input type="text" id="port_cat_${index}" placeholder="Ex: RESIDENCIAL, REFORMA" value="${item.categoria || ''}" oninput="updatePortField(${index}, 'categoria', this.value)">
-                        <img id="prev_port_${index}" class="image-preview" src="${item.img || ''}" style="${hasImage ? 'display:block' : 'display:none'}; max-width:100%; height:auto;">
-                    </div>
-                </div>`;
-            });
-        }
+function buildToolbars() {
+    for (var i = 0; i < editorTargets.length; i++) {
+        var target = editorTargets[i];
+        var toolbar = document.querySelector('#editor_' + target + ' .editor-toolbar');
+        if (!toolbar) continue;
+        toolbar.innerHTML =
+            '<select onchange="execCmd(\'fontName\',this.value)"><option value="">Fonte</option><option value="Poppins">Poppins</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Courier New">Courier New</option><option value="Verdana">Verdana</option><option value="Impact">Impact</option><option value="Comic Sans MS">Comic Sans</option><option value="Trebuchet MS">Trebuchet</option></select>' +
+            '<select onchange="execCmdFor(\''+target+'\',\'fontSize\',this.value)"><option value="">Tamanho</option><option value="1">8px</option><option value="2">10px</option><option value="3">12px</option><option value="4">14px</option><option value="5">18px</option><option value="6">24px</option><option value="7">36px</option></select>' +
+            '<span class="sep"></span>' +
+            '<button type="button" title="Negrito" onclick="execCmdFor(\''+target+'\',\'bold\')"><i class="fas fa-bold"></i></button>' +
+            '<button type="button" title="Itálico" onclick="execCmdFor(\''+target+'\',\'italic\')"><i class="fas fa-italic"></i></button>' +
+            '<button type="button" title="Sublinhado" onclick="execCmdFor(\''+target+'\',\'underline\')"><i class="fas fa-underline"></i></button>' +
+            '<button type="button" title="Tachado" onclick="execCmdFor(\''+target+'\',\'strikeThrough\')"><i class="fas fa-strikethrough"></i></button>' +
+            '<span class="sep"></span>' +
+            '<input type="color" title="Cor do texto" value="#333333" onchange="execCmdFor(\''+target+'\',\'foreColor\',this.value)">' +
+            '<input type="color" title="Cor de fundo" value="#ffffff" onchange="execCmdFor(\''+target+'\',\'hiliteColor\',this.value)">' +
+            '<span class="sep"></span>' +
+            '<button type="button" title="Alinhar esquerda" onclick="execCmdFor(\''+target+'\',\'justifyLeft\')"><i class="fas fa-align-left"></i></button>' +
+            '<button type="button" title="Centralizar" onclick="execCmdFor(\''+target+'\',\'justifyCenter\')"><i class="fas fa-align-center"></i></button>' +
+            '<button type="button" title="Alinhar direita" onclick="execCmdFor(\''+target+'\',\'justifyRight\')"><i class="fas fa-align-right"></i></button>' +
+            '<button type="button" title="Justificar" onclick="execCmdFor(\''+target+'\',\'justifyFull\')"><i class="fas fa-align-justify"></i></button>' +
+            '<span class="sep"></span>' +
+            '<button type="button" title="Lista não ordenada" onclick="execCmdFor(\''+target+'\',\'insertUnorderedList\')"><i class="fas fa-list-ul"></i></button>' +
+            '<button type="button" title="Lista ordenada" onclick="execCmdFor(\''+target+'\',\'insertOrderedList\')"><i class="fas fa-list-ol"></i></button>' +
+            '<span class="sep"></span>' +
+            '<button type="button" title="Desfazer" onclick="execCmdFor(\''+target+'\',\'undo\')"><i class="fas fa-undo"></i></button>' +
+            '<button type="button" title="Refazer" onclick="execCmdFor(\''+target+'\',\'redo\')"><i class="fas fa-redo"></i></button>' +
+            '<button type="button" title="Remover formatação" onclick="execCmdFor(\''+target+'\',\'removeFormat\')"><i class="fas fa-eraser"></i></button>';
+    }
+}
 
-        function addPortItem() {
-            portfolioItems.push({ img: '', nome: '', categoria: 'RESIDENCIAL' });
-            renderPortfolio();
-        }
+function execCmd(cmd, val) {
+    document.execCommand(cmd, false, val || null);
+}
 
-        function removePortItem(index) {
-            if (confirm('Tem certeza que deseja remover este projeto?')) {
-                portfolioItems.splice(index, 1);
-                renderPortfolio();
-            }
-        }
+function execCmdFor(editorId, cmd, val) {
+    var el = document.getElementById(editorId);
+    if (!el) return;
+    el.focus();
+    document.execCommand(cmd, false, val || null);
+}
 
-        function updatePortField(index, field, value) {
-            portfolioItems[index][field] = value;
-        }
+/* ===== NAVIGATION ===== */
+document.querySelectorAll('.nav-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-link').forEach(function(l) { l.classList.remove('active'); });
+        document.querySelectorAll('.section-panel').forEach(function(p) { p.classList.remove('active'); });
+        link.classList.add('active');
+        var target = link.getAttribute('data-target');
+        document.getElementById(target).classList.add('active');
+        document.getElementById('current-section-title').innerText = link.innerText.trim();
+    });
+});
 
-        function handleDynUpload(input, index) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width, height = img.height;
-                    const max_size = 800;
-                    if (width > height) {
-                        if (width > max_size) { height *= max_size / width; width = max_size; }
-                    } else {
-                        if (height > max_size) { width *= max_size / height; height = max_size; }
-                    }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-                    updatePortField(index, 'img', dataUrl);
-                    renderPortfolio();
+/* ===== LOGIN ===== */
+if (localStorage.getItem('mcp_admin_logged') === 'true') mostrarApp();
+
+function realizarLogin() {
+    var email = document.getElementById('login-email').value.toLowerCase();
+    var pass = document.getElementById('login-pass').value;
+    if (email === LOGIN_CORRETO && pass === SENHA_CORRETA) {
+        localStorage.setItem('mcp_admin_logged', 'true');
+        notify('Login realizado!', '#4CAF50');
+        setTimeout(mostrarApp, 500);
+    } else {
+        var err = document.getElementById('login-error');
+        err.style.display = 'block';
+        setTimeout(function() { err.style.display = 'none'; }, 3000);
+    }
+}
+
+function realizarLogout() {
+    localStorage.removeItem('mcp_admin_logged');
+    document.getElementById('admin-panel').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+}
+
+function mostrarApp() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('admin-panel').classList.remove('hidden');
+    buildToolbars();
+    carregarDados();
+}
+
+/* ===== LOAD DATA ===== */
+function carregarDados() {
+    fetch(API_URL)
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(result) {
+            var config = result.config || {};
+            var portfolio = result.portfolio || [];
+            var data = Object.keys(config).length > 0 ? config : defaultConfig;
+
+            for (var key in defaultConfig) {
+                var el = document.getElementById(key);
+                if (!el) continue;
+                var val = data[key] !== undefined && data[key] !== null ? data[key] : defaultConfig[key];
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.value = val;
+                } else if (el.getAttribute('contenteditable') === 'true') {
+                    el.innerHTML = val;
                 }
-                img.src = e.target.result;
+                if (key.indexOf('_img') !== -1) {
+                    var prevId = getPreviewId(key);
+                    if (prevId) previewImg(key, prevId);
+                }
+                if (key === 'logo_size') {
+                    var valEl = document.getElementById('logo_size_val');
+                    if (valEl) valEl.innerText = val + 'px';
+                }
             }
-            reader.readAsDataURL(file);
-        }
 
-        if (localStorage.getItem('mcp_admin_logged') === 'true') {
-            mostrarApp();
-        }
-
-        function realizarLogin() {
-            const email = document.getElementById('login-email').value.toLowerCase();
-            const pass = document.getElementById('login-pass').value;
-
-            if (email === LOGIN_CORRETO && pass === SENHA_CORRETA) {
-                localStorage.setItem('mcp_admin_logged', 'true');
-                const notif = document.getElementById('notif');
-                notif.classList.add('show');
-                notif.innerText = "Login realizado com sucesso!";
-                notif.style.background = "#4CAF50";
-                setTimeout(() => notif.classList.remove('show'), 2000);
-                setTimeout(mostrarApp, 500);
+            if (Array.isArray(portfolio) && portfolio.length > 0) {
+                portfolioItems = portfolio;
             } else {
-                const errorEl = document.getElementById('login-error');
-                errorEl.style.display = 'block';
-                errorEl.innerText = "Credenciais inválidas! Tente novamente.";
-                setTimeout(() => errorEl.style.display = 'none', 3000);
+                portfolioItems = defaultPortfolio;
             }
-        }
-
-        function realizarLogout() {
-            localStorage.removeItem('mcp_admin_logged');
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
-
-        function mostrarApp() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('admin-panel').classList.remove('hidden');
-            carregarDados();
-        }
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-                link.classList.add('active');
-                const target = link.getAttribute('data-target');
-                document.getElementById(target).classList.add('active');
-                document.getElementById('current-section-title').innerText = link.innerText.trim();
-            });
-        });
-
-        function handleUpload(input, targetId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    const max_size = 800;
-
-                    if (width > height) {
-                        if (width > max_size) { height *= max_size / width; width = max_size; }
-                    } else {
-                        if (height > max_size) { width *= max_size / height; height = max_size; }
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-                    document.getElementById(targetId).value = dataUrl;
-                    previewImg(targetId, getPreviewId(targetId));
+            renderPortfolio();
+        })
+        .catch(function(e) {
+            console.error('Erro ao carregar:', e);
+            notify('Usando dados padrão', '#e74c3c');
+            for (var key in defaultConfig) {
+                var el = document.getElementById(key);
+                if (!el) continue;
+                el.value = defaultConfig[key];
+                if (key.indexOf('_img') !== -1) {
+                    var prevId = getPreviewId(key);
+                    if (prevId) previewImg(key, prevId);
                 }
-                img.src = e.target.result;
+                if (key === 'logo_size') document.getElementById('logo_size_val').innerText = defaultConfig[key] + 'px';
             }
-            reader.readAsDataURL(file);
+            portfolioItems = defaultPortfolio;
+            renderPortfolio();
+        });
+}
+
+/* ===== SAVE DATA ===== */
+function salvarAlteracoes() {
+    var data = {};
+    for (var key in defaultConfig) {
+        var el = document.getElementById(key);
+        if (el) {
+            if (el.getAttribute('contenteditable') === 'true') {
+                data[key] = el.innerHTML;
+            } else {
+                data[key] = el.value;
+            }
+        } else {
+            data[key] = defaultConfig[key];
         }
+    }
 
-        function getPreviewId(inputId) {
-            const map = {
-                'logo_img': 'prev_logo',
-                'slide1_img': 'prev_slide1',
-                'slide2_img': 'prev_slide2',
-                'slide3_img': 'prev_slide3',
-                'slide4_img': 'prev_slide4',
-                'serv_img1': 'prev_serv1',
-                'serv_img2': 'prev_serv2',
-                'sobre_img': 'prev_sobre',
-                'cta_img': 'prev_cta',
-                'proj1_img': 'prev_proj1',
-                'proj2_img': 'prev_proj2',
-                'proj3_img': 'prev_proj3',
-                'proj4_img': 'prev_proj4'
-            };
-            return map[inputId] || '';
+    notify('Salvando...', '#2196F3');
+    fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config: data, portfolio: portfolioItems })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(result) {
+        if (result.success) {
+            notify('Salvo! Visível em todos os dispositivos.', '#4CAF50');
+        } else {
+            throw new Error(result.error || 'Erro');
         }
+    })
+    .catch(function(e) {
+        console.error('Erro ao salvar:', e);
+        notify('Erro ao salvar!', '#e74c3c');
+    });
+}
 
-        const defaultConfig = {
-            logo_img: "LOGO1.png",
-            logo_size: "55",
-            logo_texto_1: "MCP",
-            logo_texto_2: "Construções",
-            logo_sub: "Engenharia e Obras",
+/* ===== EXPORT ===== */
+function exportarDados() {
+    var data = {};
+    for (var key in defaultConfig) {
+        var el = document.getElementById(key);
+        data[key] = el ? (el.getAttribute('contenteditable') === 'true' ? el.innerHTML : el.value) : defaultConfig[key];
+    }
+    var blob = new Blob([JSON.stringify({ config: data, portfolio: portfolioItems }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mcp-backup.json';
+    a.click();
+}
 
-            slide1_tit1: "Construção Civil",
-            slide1_tit2: "de Alto Padrão",
-            slide1_sub: "Mais de 15 anos construindo o futuro com excelência.",
-            slide1_img: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&q=80",
+/* ===== HELPERS ===== */
+function getPreviewId(id) {
+    var map = {logo_img:'prev_logo',slide1_img:'prev_slide1',slide2_img:'prev_slide2',slide3_img:'prev_slide3',slide4_img:'prev_slide4',serv_img1:'prev_serv1',serv_img2:'prev_serv2',sobre_img:'prev_sobre',cta_img:'prev_cta',proj1_img:'prev_proj1',proj2_img:'prev_proj2',proj3_img:'prev_proj3',proj4_img:'prev_proj4'};
+    return map[id] || '';
+}
 
-            slide2_tit1: "Obras Residenciais",
-            slide2_tit2: "e Comerciais",
-            slide2_img: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80",
+function previewImg(inputId, imgId) {
+    var inputEl = document.getElementById(inputId);
+    var imgEl = document.getElementById(imgId);
+    if (imgEl && inputEl) {
+        var val = inputEl.value;
+        if (val && val.length > 0) { imgEl.src = val; imgEl.classList.remove('hidden'); }
+        else { imgEl.classList.add('hidden'); }
+    }
+}
 
-            slide3_tit1: "Reformas e",
-            slide3_tit2: "Ampliações",
-            slide3_img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80",
+function clearField(id) {
+    var el = document.getElementById(id);
+    if (el) { el.value = ''; var p = getPreviewId(id); if (p) { var img = document.getElementById(p); if (img) img.classList.add('hidden'); } }
+}
 
-            slide4_tit1: "Galpões e",
-            slide4_tit2: "Construção Industrial",
-            slide4_img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80",
+function clearEditor(id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+}
 
-            stats_text: "NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.",
-
-            serv_tit1: "Construção Residencial",
-            serv_txt1: "A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados para entregar a casa dos seus sonhos.",
-            serv_img1: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80",
-
-            serv_tit2: "Obras Comerciais e Industriais",
-            serv_txt2: "Galpões, lojas, escritórios e estruturas industriais prontos para o seu negócio. Projetos sob medida com eficiência e qualidade.",
-            serv_img2: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&q=80",
-
-            proj_tit: "PROJETOS RECENTES",
-            proj1_nome: "Residencial Vila Nova",
-            proj1_img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80",
-            proj2_nome: "Centro Empresarial",
-            proj2_img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80",
-            proj3_nome: "Muro de Arrimo",
-            proj3_img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80",
-            proj4_nome: "Projeto Comercial",
-            proj4_img: "https://images.unsplash.com/photo-1545670723-196ed0954986?w=400&q=80",
-
-            sobre_tit: "Sobre Nós",
-            sobre_txt: "A MCP Construções nasceu da paixão por transformar projetos em realidade. Com mais de 15 anos de experiência no mercado da construção civil, nos consolidamos como referência em qualidade, compromisso e inovação. Nossa equipe é formada por profissionais altamente qualificados, prontos para atender às suas necessidades com excelência.",
-            sobre_img: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1000&q=80",
-
-            cta_tit: "NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.",
-            cta_sub: "Estamos sempre empenhados em ajudar nossos clientes em cada projeto.",
-            cta_img: "wp-content/themes/nobislux/images/bg-01.jpg",
-
-            contato_end: "Lisboa — Portugal",
-            contato_tel: "+351 934 627 192",
-            contato_email: "contato@mcpconstrucoes.pt",
-            contato_hr: "Seg–Sex: 08h às 18h",
-            footer_desc: "Mais de 15 anos entregando obras com qualidade, prazo e compromisso."
+function handleUpload(input, targetId) {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var w = img.width, h = img.height, max = 800;
+            if (w > h) { if (w > max) { h *= max / w; w = max; } }
+            else { if (h > max) { w *= max / h; h = max; } }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            document.getElementById(targetId).value = dataUrl;
+            previewImg(targetId, getPreviewId(targetId));
         };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
-        const defaultPortfolio = [
-            { img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80", nome: "Residencial Vila Nova", categoria: "RESIDENCIAL" },
-            { img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80", nome: "Centro Empresarial Horizonte", categoria: "COMERCIAL" },
-            { img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80", nome: "Galpão Logístico LP-12", categoria: "INDUSTRIAL" },
-            { img: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80", nome: "Casa Alto Padrão SP", categoria: "RESIDENCIAL, REFORMA" },
-            { img: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&q=80", nome: "Escritório Corporativo Premium", categoria: "COMERCIAL, ACABAMENTO" },
-            { img: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80", nome: "Reforma Completa Campinas", categoria: "REFORMA, ACABAMENTO" },
-            { img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80", nome: "Condomínio Residencial Guarulhos", categoria: "RESIDENCIAL" },
-            { img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", nome: "Complexo Industrial ABC", categoria: "INDUSTRIAL" },
-            { img: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600&q=80", nome: "Acabamento Residencial", categoria: "ACABAMENTO" },
-            { img: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80", nome: "Loja Shopping Center", categoria: "COMERCIAL" },
-            { img: "https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=600&q=80", nome: "Reforma Comercial SP", categoria: "REFORMA" },
-            { img: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80", nome: "Apartamento Alto Padrão", categoria: "RESIDENCIAL, ACABAMENTO" }
-        ];
+function notify(msg, color) {
+    var n = document.getElementById('notif');
+    n.classList.add('show');
+    n.innerText = msg;
+    n.style.background = color || '#4CAF50';
+    setTimeout(function() { n.classList.remove('show'); }, 3000);
+}
 
-        const API_URL = 'https://mpc-construcoes.vercel.app/api/site-data';
+/* ===== PORTFOLIO ===== */
+function renderPortfolio() {
+    var container = document.getElementById('portfolio-container');
+    container.innerHTML = '';
+    if (portfolioItems.length === 0) {
+        container.innerHTML = '<p style="padding:20px;text-align:center;color:#666;">Nenhum projeto. Clique em "Adicionar".</p>';
+        return;
+    }
+    for (var i = 0; i < portfolioItems.length; i++) {
+        (function(idx) {
+            var item = portfolioItems[idx];
+            var hasImg = item.img && item.img.length > 0;
+            var div = document.createElement('div');
+            div.className = 'port-item';
+            div.innerHTML =
+                '<div class="port-item-header"><strong>Projeto ' + (idx + 1) + '</strong><div style="display:flex;gap:6px;">' +
+                '<button class="btn btn-sm btn-red" onclick="removePortItem(' + idx + ')"><i class="fas fa-trash"></i> Excluir</button></div></div>' +
+                '<div class="upload-row"><input type="file" accept="image/*" onchange="handlePortUpload(this,' + idx + ')"><input type="text" id="port_img_' + idx + '" placeholder="URL da foto" value="' + (item.img || '') + '" oninput="updatePortField(' + idx + ',\'img\',this.value);previewImg(\'port_img_' + idx + '\',\'prev_port_' + idx + '\')"></div>' +
+                '<div class="form-group"><label>Nome</label><input type="text" id="port_nome_' + idx + '" placeholder="Nome do projeto" value="' + (item.nome || '') + '" oninput="updatePortField(' + idx + ',\'nome\',this.value)"></div>' +
+                '<div class="form-group"><label>Categoria (separadas por vírgula)</label><input type="text" id="port_cat_' + idx + '" placeholder="Ex: RESIDENCIAL, REFORMA" value="' + (item.categoria || '') + '" oninput="updatePortField(' + idx + ',\'categoria\',this.value)"></div>' +
+                '<img id="prev_port_' + idx + '" class="img-preview ' + (hasImg ? '' : 'hidden') + '" src="' + (item.img || '') + '">';
+            container.appendChild(div);
+        })(i);
+    }
+}
 
-        function carregarDados() {
-            fetch(API_URL)
-                .then(r => {
-                    if (!r.ok) throw new Error('HTTP ' + r.status);
-                    return r.json();
-                })
-                .then(function(result) {
-                    var config = result.config || {};
-                    var portfolio = result.portfolio || [];
-                    var savedData = Object.keys(config).length > 0 ? config : defaultConfig;
+function addPortItem() {
+    portfolioItems.push({ img: '', nome: '', categoria: 'RESIDENCIAL' });
+    renderPortfolio();
+}
 
-                    for (var key in defaultConfig) {
-                        var el = document.getElementById(key);
-                        if (el) {
-                            var val = savedData[key] !== undefined && savedData[key] !== null ? savedData[key] : defaultConfig[key];
-                            el.value = val;
-                            if (key.indexOf('_img') !== -1) {
-                                var prevId = getPreviewId(key);
-                                if (prevId) previewImg(key, prevId);
-                            }
-                            if (key === 'logo_size') {
-                                var valEl = document.getElementById('logo_size_val');
-                                if (valEl) valEl.innerText = val + 'px';
-                            }
-                        }
-                    }
+function removePortItem(idx) {
+    if (confirm('Remover este projeto?')) {
+        portfolioItems.splice(idx, 1);
+        renderPortfolio();
+    }
+}
 
-                    if (Array.isArray(portfolio) && portfolio.length > 0) {
-                        portfolioItems = portfolio;
-                    } else {
-                        portfolioItems = defaultPortfolio;
-                    }
-                    renderPortfolio();
-                })
-                .catch(function(e) {
-                    console.error('Erro ao carregar dados:', e);
-                    for (var key in defaultConfig) {
-                        var el = document.getElementById(key);
-                        if (el) {
-                            el.value = defaultConfig[key];
-                            if (key.indexOf('_img') !== -1) {
-                                var prevId = getPreviewId(key);
-                                if (prevId) previewImg(key, prevId);
-                            }
-                            if (key === 'logo_size') {
-                                document.getElementById('logo_size_val').innerText = defaultConfig[key] + 'px';
-                            }
-                        }
-                    }
-                    portfolioItems = defaultPortfolio;
-                    renderPortfolio();
-                });
-        }
+function updatePortField(idx, field, value) {
+    portfolioItems[idx][field] = value;
+}
 
-        function salvarAlteracoes() {
-            var savedData = {};
-            for (var key in defaultConfig) {
-                var el = document.getElementById(key);
-                savedData[key] = el ? el.value : defaultConfig[key];
-            }
+function handlePortUpload(input, idx) {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var w = img.width, h = img.height, max = 800;
+            if (w > h) { if (w > max) { h *= max / w; w = max; } }
+            else { if (h > max) { w *= max / h; h = max; } }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            updatePortField(idx, 'img', dataUrl);
+            renderPortfolio();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
-            var notif = document.getElementById('notif');
-            notif.classList.add('show');
-            notif.innerText = 'Salvando...';
-            notif.style.background = '#2196F3';
-
-            fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ config: savedData, portfolio: portfolioItems })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(result) {
-                if (result.success) {
-                    notif.innerText = 'Alterações salvas! Visível em todos os dispositivos.';
-                    notif.style.background = '#4CAF50';
-                } else {
-                    throw new Error(result.error || 'Erro desconhecido');
-                }
-            })
-            .catch(function(e) {
-                console.error('Erro ao salvar:', e);
-                notif.innerText = 'Erro ao salvar! Verifique sua conexão.';
-                notif.style.background = '#e74c3c';
-            })
-            .finally(function() {
-                setTimeout(function() { notif.classList.remove('show'); }, 3000);
-            });
-        }
-
-        function exportarDados() {
-            var savedData = {};
-            for (var key in defaultConfig) {
-                var el = document.getElementById(key);
-                savedData[key] = el ? el.value : defaultConfig[key];
-            }
-            var dados = { config: savedData, portfolio: portfolioItems };
-            var blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'mcp-construcoes-backup.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function showNotification(msg, color) {
-            var notif = document.getElementById('notif');
-            notif.classList.add('show');
-            notif.innerText = msg;
-            notif.style.background = color || '#4CAF50';
-            setTimeout(function() { notif.classList.remove('show'); }, 3000);
-        }
-
-        function previewImg(inputId, imgId) {
-            var inputEl = document.getElementById(inputId);
-            var imgEl = document.getElementById(imgId);
-            if (imgEl && inputEl) {
-                var val = inputEl.value;
-                if (val && val.length > 0) {
-                    imgEl.src = val;
-                    imgEl.style.display = 'block';
-                } else {
-                    imgEl.style.display = 'none';
-                }
-            }
-        }
-
-        window.addEventListener('load', function() {
-            var logoEl = document.getElementById('logo_img');
-            if (logoEl) previewImg('logo_img', 'prev_logo');
-            ['slide1', 'slide2', 'slide3', 'slide4'].forEach(function(num) {
-                previewImg(num + '_img', 'prev_' + num);
-            });
-            previewImg('serv_img1', 'prev_serv1');
-            previewImg('serv_img2', 'prev_serv2');
-            previewImg('sobre_img', 'prev_sobre');
-            previewImg('cta_img', 'prev_cta');
-            for (var i = 1; i <= 4; i++) {
-                previewImg('proj' + i + '_img', 'prev_proj' + i);
-            }
-        });
-    </script>
+/* ===== INIT PREVIEWS ===== */
+window.addEventListener('load', function() {
+    var logoEl = document.getElementById('logo_img');
+    if (logoEl) previewImg('logo_img', 'prev_logo');
+    ['slide1','slide2','slide3','slide4'].forEach(function(num) { previewImg(num + '_img', 'prev_' + num); });
+    previewImg('serv_img1', 'prev_serv1');
+    previewImg('serv_img2', 'prev_serv2');
+    previewImg('sobre_img', 'prev_sobre');
+    previewImg('cta_img', 'prev_cta');
+    for (var i = 1; i <= 4; i++) { previewImg('proj' + i + '_img', 'prev_proj' + i); }
+});
+</script>
 </body>
-
 </html>
