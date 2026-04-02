@@ -157,41 +157,10 @@
                 </div>
                 <img id="prev_logo" class="img-preview hidden" src="">
             </div>
-            <div class="slide-block" id="slide5_block">
-                <h4><i class="fas fa-layer-group"></i> Slide 5: Adicionais + slide</h4>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label">Título do Slide</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_tit1');clearField('slide5_tit2')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide5_tit1" placeholder="Ex: Adicional Título 1"></div>
-                    <div class="form-group"><label>Título Destacado (Dourado)</label><input type="text" id="slide5_tit2" placeholder="Ex: Adicional Título 2"></div>
+            <div class="field-block">
+                <div class="field-header">
+                    <span class="field-label"><i class="fas fa-text-width"></i> Tamanho da Logo</span>
                 </div>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label">Subtítulo</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_sub')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group"><label>Texto</label><input type="text" id="slide5_sub" placeholder="Descrição do slide adicional"></div>
-                </div>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label"><i class="fas fa-image"></i> Imagem de Fundo</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_img')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="upload-row">
-                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide5_img')">
-                        <input type="text" id="slide5_img" placeholder="URL da imagem" oninput="previewImg('slide5_img','prev_slide5')">
-                    </div>
-                    <img id="prev_slide5" class="img-preview hidden" src="">
-                </div>
-            </div>
                 <label>Altura: <strong id="logo_size_val">55px</strong></label>
                 <input type="range" id="logo_size" min="30" max="150" value="55" step="5" oninput="document.getElementById('logo_size_val').innerText=this.value+'px'">
             </div>
@@ -299,42 +268,6 @@
                 </div>
             </div>
 
-            <div class="slide-block" id="slide5_block">
-                <h4><i class="fas fa-layer-group"></i> Slide 5: Adicionais + slide</h4>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label">Título do Slide</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_tit1');clearField('slide5_tit2')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide5_tit1" placeholder="Ex: Adicional Título 1"></div>
-                    <div class="form-group"><label>Título Destacado (Dourado)</label><input type="text" id="slide5_tit2" placeholder="Ex: Adicional Título 2"></div>
-                </div>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label">Subtítulo</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_sub')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group"><label>Texto</label><input type="text" id="slide5_sub" placeholder="Descrição do slide adicional"></div>
-                </div>
-                <div class="field-block">
-                    <div class="field-header">
-                        <span class="field-label"><i class="fas fa-image"></i> Imagem de Fundo</span>
-                        <div class="field-actions">
-                            <button class="btn btn-sm btn-red" onclick="clearField('slide5_img')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <div class="upload-row">
-                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide5_img')">
-                        <input type="text" id="slide5_img" placeholder="URL da imagem" oninput="previewImg('slide5_img','prev_slide5')">
-                    </div>
-                    <img id="prev_slide5" class="img-preview hidden" src="">
-                </div>
-            </div>
-
             <div class="field-block">
                 <div class="field-header">
                     <span class="field-label"><i class="fas fa-typewriter"></i> Texto Animado (Estatísticas)</span>
@@ -400,7 +333,6 @@
             <h3><i class="fas fa-th-large"></i> Cards de Serviços</h3>
             <p>Edite os 6 cards que aparecem abaixo da seção Serviços no site principal.</p>
 
-            <!-- Card 1 -->
             <div class="slide-block">
                 <h4><i class="fas fa-home"></i> Card 1</h4>
                 <div class="field-block">
@@ -409,14 +341,13 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card1_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card1_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card1_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card1_txt" data-placeholder="Descrição do card..."></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 2 -->
             <div class="slide-block">
                 <h4><i class="fas fa-tools"></i> Card 2</h4>
                 <div class="field-block">
@@ -425,14 +356,13 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card2_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card2_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card2_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card2_txt" data-placeholder="Descrição do card..."></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 3 -->
             <div class="slide-block">
                 <h4><i class="fas fa-building"></i> Card 3</h4>
                 <div class="field-block">
@@ -441,14 +371,13 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card3_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card3_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card3_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card3_txt" data-placeholder="Descrição do card..."></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 4 -->
             <div class="slide-block">
                 <h4><i class="fas fa-paint-roller"></i> Card 4</h4>
                 <div class="field-block">
@@ -457,14 +386,13 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card4_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card4_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card4_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card4_txt" data-placeholder="Descrição do card..."></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 5 -->
             <div class="slide-block">
                 <h4><i class="fas fa-bolt"></i> Card 5</h4>
                 <div class="field-block">
@@ -473,14 +401,13 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card5_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card5_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card5_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card5_txt" data-placeholder="Descrição do card..."></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 6 -->
             <div class="slide-block">
                 <h4><i class="fas fa-clipboard-list"></i> Card 6</h4>
                 <div class="field-block">
@@ -489,7 +416,7 @@
                 </div>
                 <div class="field-block">
                     <div class="field-header"><span class="field-label"><i class="fas fa-edit"></i> Descrição</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearEditor('card6_txt')"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="editor-wrapper">
+                    <div id="editor_card6_txt" class="editor-wrapper">
                         <div class="editor-toolbar" data-target="card6_txt"></div>
                         <div class="editor-content" contenteditable="true" id="card6_txt" data-placeholder="Descrição do card..."></div>
                     </div>
@@ -659,11 +586,11 @@ var portfolioItems = [];
 
 var defaultConfig = {
     logo_img:'LOGO1.png',logo_size:'55',logo_texto_1:'MCP',logo_texto_2:'Construções',logo_sub:'Engenharia e Obras',
-    slide1_tit1:'MPC Construções',slide1_tit2:'Marca da Promessa',slide1_sub:'Construção Civil com Excelência.',
+    slide1_tit1:'Construção Civil',slide1_tit2:'de Alto Padrão',slide1_sub:'Mais de 15 anos construindo o futuro com excelência.',
     slide1_img:'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&q=80',
     slide2_tit1:'Obras Residenciais',slide2_tit2:'e Comerciais',slide2_img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80',
     slide3_tit1:'Reformas e',slide3_tit2:'Ampliações',slide3_img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
-    slide4_tit1:'Galpões e',slide4_tit2:'Construção Industrial',slide4_img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',slide5_tit1:'Adicional Título 1',slide5_tit2:'Adicional Título 2',slide5_sub:'Descrição do slide adicional',slide5_img:'',slide5_tit1:'Adicional Título 1',slide5_tit2:'Adicional Título 2',slide5_sub:'Descrição do slide adicional',slide5_img:'',
+    slide4_tit1:'Galpões e',slide4_tit2:'Construção Industrial',slide4_img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
     stats_text:'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',
     serv_tit1:'Construção Residencial',serv_txt1:'<p>A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados.</p>',
     serv_img1:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80',
