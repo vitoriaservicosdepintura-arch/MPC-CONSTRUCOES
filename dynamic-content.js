@@ -127,11 +127,16 @@
 
             if (window.jQuery) {
                 var imgs = [md.slide1_img, md.slide2_img, md.slide3_img, md.slide4_img, md.slide5_img];
+                var numSlides = 5;
                 jQuery('#section-1 .slick-slide').each(function() {
                     var idx = parseInt(jQuery(this).attr('data-slick-index'));
-                    if (!isNaN(idx) && imgs[idx]) {
-                        jQuery(this).find('.bg-img').css('background-image', 'url(' + imgs[idx] + ')');
-                        jQuery(this).find('img').attr('src', imgs[idx]);
+                    if (!isNaN(idx)) {
+                        while (idx < 0) idx += numSlides;
+                        var mappedIdx = idx % numSlides;
+                        if (imgs[mappedIdx]) {
+                            jQuery(this).find('.bg-img').css('background-image', 'url(' + imgs[mappedIdx] + ')');
+                            jQuery(this).find('img').attr('src', imgs[mappedIdx]);
+                        }
                     }
                 });
             }
