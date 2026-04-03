@@ -268,6 +268,23 @@
                 </div>
             </div>
 
+            <div class="slide-block">
+                <h4><i class="fas fa-layer-group"></i> Slide 5</h4>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label">Título</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide5_tit1');clearField('slide5_tit2')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="form-group"><label>Título Principal</label><input type="text" id="slide5_tit1" placeholder="Ex: Qualidade e"></div>
+                    <div class="form-group"><label>Título Destacado</label><input type="text" id="slide5_tit2" placeholder="Ex: Compromisso"></div>
+                </div>
+                <div class="field-block">
+                    <div class="field-header"><span class="field-label"><i class="fas fa-image"></i> Imagem</span><div class="field-actions"><button class="btn btn-sm btn-red" onclick="clearField('slide5_img')"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="upload-row">
+                        <input type="file" accept="image/*" onchange="handleUpload(this,'slide5_img')">
+                        <input type="text" id="slide5_img" placeholder="URL da imagem" oninput="previewImg('slide5_img','prev_slide5')">
+                    </div>
+                    <img id="prev_slide5" class="img-preview hidden" src="">
+                </div>
+            </div>
+
             <div class="field-block">
                 <div class="field-header">
                     <span class="field-label"><i class="fas fa-typewriter"></i> Texto Animado (Estatísticas)</span>
@@ -591,6 +608,7 @@ var defaultConfig = {
     slide2_tit1:'Obras Residenciais',slide2_tit2:'e Comerciais',slide2_img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600&q=80',
     slide3_tit1:'Reformas e',slide3_tit2:'Ampliações',slide3_img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
     slide4_tit1:'Galpões e',slide4_tit2:'Construção Industrial',slide4_img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+    slide5_tit1:'Qualidade e',slide5_tit2:'Compromisso',slide5_img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
     stats_text:'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',
     serv_tit1:'Construção Residencial',serv_txt1:'<p>A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados.</p>',
     serv_img1:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80',
@@ -817,7 +835,7 @@ function exportarDados() {
 
 /* ===== HELPERS ===== */
 function getPreviewId(id) {
-    var map = {logo_img:'prev_logo',slide1_img:'prev_slide1',slide2_img:'prev_slide2',slide3_img:'prev_slide3',slide4_img:'prev_slide4',serv_img1:'prev_serv1',serv_img2:'prev_serv2',sobre_img:'prev_sobre',cta_img:'prev_cta',proj1_img:'prev_proj1',proj2_img:'prev_proj2',proj3_img:'prev_proj3',proj4_img:'prev_proj4'};
+    var map = {logo_img:'prev_logo',slide1_img:'prev_slide1',slide2_img:'prev_slide2',slide3_img:'prev_slide3',slide4_img:'prev_slide4',slide5_img:'prev_slide5',serv_img1:'prev_serv1',serv_img2:'prev_serv2',sobre_img:'prev_sobre',cta_img:'prev_cta',proj1_img:'prev_proj1',proj2_img:'prev_proj2',proj3_img:'prev_proj3',proj4_img:'prev_proj4'};
     return map[id] || '';
 }
 
@@ -939,7 +957,7 @@ function handlePortUpload(input, idx) {
 window.addEventListener('load', function() {
     var logoEl = document.getElementById('logo_img');
     if (logoEl) previewImg('logo_img', 'prev_logo');
-    ['slide1','slide2','slide3','slide4'].forEach(function(num) { previewImg(num + '_img', 'prev_' + num); });
+    ['slide1','slide2','slide3','slide4','slide5'].forEach(function(num) { previewImg(num + '_img', 'prev_' + num); });
     previewImg('serv_img1', 'prev_serv1');
     previewImg('serv_img2', 'prev_serv2');
     previewImg('sobre_img', 'prev_sobre');

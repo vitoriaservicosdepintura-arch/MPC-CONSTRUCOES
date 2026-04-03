@@ -20,6 +20,9 @@
         slide4_tit1: 'Galpões e',
         slide4_tit2: 'Construção Industrial',
         slide4_img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
+        slide5_tit1: 'Qualidade e',
+        slide5_tit2: 'Compromisso',
+        slide5_img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
         stats_text: 'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',
         serv_tit1: 'Construção Residencial',
         serv_txt1: 'A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados para entregar a casa dos seus sonhos.',
@@ -97,7 +100,7 @@
         }
 
         var slides = $$('#section-1 .slide');
-        if (slides.length >= 4) {
+        if (slides.length >= 5) {
             slides[0].querySelector('h1').innerHTML = md.slide1_tit1 + '<br><span style="color:#c8a96e;">' + md.slide1_tit2 + '</span>';
             var s0p = slides[0].querySelector('p');
             if (s0p) s0p.innerHTML = md.slide1_sub;
@@ -111,6 +114,9 @@
 
             slides[3].querySelector('h1').innerHTML = md.slide4_tit1 + '<br>' + md.slide4_tit2;
             if (md.slide4_img) slides[3].style.backgroundImage = 'url(' + md.slide4_img + ')';
+
+            slides[4].querySelector('h1').innerHTML = md.slide5_tit1 + '<br>' + md.slide5_tit2;
+            if (md.slide5_img) slides[4].style.backgroundImage = 'url(' + md.slide5_img + ')';
         }
 
         setHtml('.typing-txt', md.stats_text);
