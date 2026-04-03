@@ -22,7 +22,7 @@
         slide4_img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80',
         slide5_tit1: 'Qualidade e',
         slide5_tit2: 'Compromisso',
-        slide5_img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80',
+        slide5_img: 'https://images.unsplash.com/photo-1541888946425-f8fb40cf4e7e?w=1600&q=80',
         stats_text: 'NA MCP CONSTRUÇÕES, CADA DETALHE É IMPORTANTE.',
         serv_tit1: 'Construção Residencial',
         serv_txt1: 'A MCP Construções é especializada em obras residenciais de alto padrão. Trabalhamos com materiais de primeira linha e profissionais qualificados para entregar a casa dos seus sonhos.',
@@ -104,11 +104,14 @@
             function updateSlide(index, tit1, tit2, img) {
                 var s = slides[index];
                 if (!s) return;
-                s.querySelector('h1').innerHTML = tit1 + '<br>' + tit2;
+                var h1 = s.querySelector('h1');
+                if (h1) h1.innerHTML = tit1 + '<br>' + tit2;
                 if (img) {
                     s.style.backgroundImage = 'url(' + img + ')';
-                    var sImg = s.querySelector('img');
-                    if (sImg) sImg.src = img;
+                    var allImgs = s.querySelectorAll('img');
+                    for (var i = 0; i < allImgs.length; i++) {
+                        allImgs[i].src = img;
+                    }
                 }
             }
             updateSlide(0, md.slide1_tit1, '<span style="color:#c8a96e;">' + md.slide1_tit2 + '</span>', md.slide1_img);
@@ -119,22 +122,22 @@
             updateSlide(3, md.slide4_tit1, md.slide4_tit2, md.slide4_img);
             updateSlide(4, md.slide5_tit1, md.slide5_tit2, md.slide5_img);
 
+            if (window.jQuery && jQuery('.home-slideshow').hasClass('slick-initialized')) {
+                jQuery('.home-slideshow').slick('unslick');
+            }
             if (window.jQuery && jQuery('.home-slideshow').slick) {
-                setTimeout(function() {
-                    jQuery('.home-slideshow').slick('unslick');
-                    jQuery('.home-slideshow').slick({
-                        autoplay: true,
-                        autoplaySpeed: 6000,
-                        infinite: true,
-                        pauseOnHover: false,
-                        pauseOnFocus: false,
-                        arrows: true,
-                        dots: true,
-                        fade: true,
-                        appendDots: jQuery('.controls-bar'),
-                        appendArrows: jQuery('.controls-bar')
-                    });
-                }, 100);
+                jQuery('.home-slideshow').slick({
+                    autoplay: true,
+                    autoplaySpeed: 6000,
+                    infinite: true,
+                    pauseOnHover: false,
+                    pauseOnFocus: false,
+                    arrows: true,
+                    dots: true,
+                    fade: true,
+                    appendDots: jQuery('.controls-bar'),
+                    appendArrows: jQuery('.controls-bar')
+                });
             }
         }
 
