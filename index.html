@@ -65,8 +65,8 @@
 
         /* Stats bar */
         .stats-bar {
-            background: #111;
-            border-top: 2px solid var(--gold);
+            background: transparent;
+            border-top: none;
             padding: 18px 0;
         }
 
@@ -75,6 +75,16 @@
             justify-content: center;
             gap: 80px;
             flex-wrap: wrap;
+        }
+
+        .stats-bar .typing-container {
+            background: #111;
+            border-top: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
+            padding: 12px 25px;
+            border-radius: 5px;
+            display: inline-block;
+            max-width: fit-content;
         }
 
         .stat-item {
@@ -858,10 +868,10 @@
 
         <!-- ===== STATS BAR ===== -->
         <div class="stats-bar">
-            <div class="container" style="justify-content: center;">
-        <h2 class="typing-container">
-            <span class="typing-txt">MPC CONSTRUÇÕES, MARCA DA PROMESSA EM CORES E CONSTRUCAO CIVIL</span>
-        </h2>
+            <div class="container" style="justify-content: center; display: flex;">
+                <h2 class="typing-container">
+                    <span class="typing-txt">MPC CONSTRUÇÕES, MARCA DA PROMESSA EM CORES E CONSTRUCAO CIVIL</span>
+                </h2>
             </div>
         </div>
 
