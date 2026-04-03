@@ -101,42 +101,38 @@
 
         var slides = $$('#section-1 .slide');
         if (slides.length >= 5) {
-            function updateSlide(index, tit1, tit2, img) {
-                var s = slides[index];
-                if (!s) return;
-                var h1 = s.querySelector('h1');
-                if (h1) h1.innerHTML = tit1 + '<br>' + tit2;
-                if (img) {
-                    s.style.backgroundImage = 'url(' + img + ')';
-                    var allImgs = s.querySelectorAll('img');
-                    for (var i = 0; i < allImgs.length; i++) {
-                        allImgs[i].src = img;
-                    }
-                }
-            }
-            updateSlide(0, md.slide1_tit1, '<span style="color:#c8a96e;">' + md.slide1_tit2 + '</span>', md.slide1_img);
+            slides[0].querySelector('h1').innerHTML = md.slide1_tit1 + '<br><span style="color:#c8a96e;">' + md.slide1_tit2 + '</span>';
             var s0p = slides[0].querySelector('p');
             if (s0p) s0p.innerHTML = md.slide1_sub;
-            updateSlide(1, md.slide2_tit1, md.slide2_tit2, md.slide2_img);
-            updateSlide(2, md.slide3_tit1, md.slide3_tit2, md.slide3_img);
-            updateSlide(3, md.slide4_tit1, md.slide4_tit2, md.slide4_img);
-            updateSlide(4, md.slide5_tit1, md.slide5_tit2, md.slide5_img);
+            if (md.slide1_img) slides[0].style.backgroundImage = 'url(' + md.slide1_img + ')';
 
-            if (window.jQuery && jQuery('.home-slideshow').hasClass('slick-initialized')) {
-                jQuery('.home-slideshow').slick('unslick');
-            }
-            if (window.jQuery && jQuery('.home-slideshow').slick) {
-                jQuery('.home-slideshow').slick({
-                    autoplay: true,
-                    autoplaySpeed: 6000,
-                    infinite: true,
-                    pauseOnHover: false,
-                    pauseOnFocus: false,
-                    arrows: true,
-                    dots: true,
-                    fade: true,
-                    appendDots: jQuery('.controls-bar'),
-                    appendArrows: jQuery('.controls-bar')
+            slides[1].querySelector('h1').innerHTML = md.slide2_tit1 + '<br>' + md.slide2_tit2;
+            if (md.slide2_img) slides[1].style.backgroundImage = 'url(' + md.slide2_img + ')';
+
+            slides[2].querySelector('h1').innerHTML = md.slide3_tit1 + '<br>' + md.slide3_tit2;
+            if (md.slide3_img) slides[2].style.backgroundImage = 'url(' + md.slide3_img + ')';
+
+            slides[3].querySelector('h1').innerHTML = md.slide4_tit1 + '<br>' + md.slide4_tit2;
+            if (md.slide4_img) slides[3].style.backgroundImage = 'url(' + md.slide4_img + ')';
+
+            slides[4].querySelector('h1').innerHTML = md.slide5_tit1 + '<br>' + md.slide5_tit2;
+            if (md.slide5_img) slides[4].style.backgroundImage = 'url(' + md.slide5_img + ')';
+
+            var allSlideImgs = $$('#section-1 .slide img');
+            if (md.slide1_img && allSlideImgs[0]) allSlideImgs[0].src = md.slide1_img;
+            if (md.slide2_img && allSlideImgs[1]) allSlideImgs[1].src = md.slide2_img;
+            if (md.slide3_img && allSlideImgs[2]) allSlideImgs[2].src = md.slide3_img;
+            if (md.slide4_img && allSlideImgs[3]) allSlideImgs[3].src = md.slide4_img;
+            if (md.slide5_img && allSlideImgs[4]) allSlideImgs[4].src = md.slide5_img;
+
+            if (window.jQuery) {
+                var imgs = [md.slide1_img, md.slide2_img, md.slide3_img, md.slide4_img, md.slide5_img];
+                jQuery('#section-1 .slick-slide').each(function() {
+                    var idx = parseInt(jQuery(this).attr('data-slick-index'));
+                    if (!isNaN(idx) && imgs[idx]) {
+                        jQuery(this).find('.bg-img').css('background-image', 'url(' + imgs[idx] + ')');
+                        jQuery(this).find('img').attr('src', imgs[idx]);
+                    }
                 });
             }
         }
