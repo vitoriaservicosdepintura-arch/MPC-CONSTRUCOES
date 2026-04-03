@@ -117,6 +117,10 @@
 
             slides[4].querySelector('h1').innerHTML = md.slide5_tit1 + '<br>' + md.slide5_tit2;
             if (md.slide5_img) { slides[4].style.backgroundImage = 'url(' + md.slide5_img + ')'; var s4img = slides[4].querySelector('img'); if (s4img) s4img.src = md.slide5_img; }
+
+            if (window.jQuery && jQuery('.home-slideshow').slick) {
+                jQuery('.home-slideshow').slick('refresh');
+            }
         }
 
         setHtml('.typing-txt', md.stats_text);
